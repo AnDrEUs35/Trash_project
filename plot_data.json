@@ -1,23 +1,29 @@
 {
     "plot_data":{
+
         "x_coords":{
             "value": [3, 8, 5]
         },
         "y_coords": {
             "value": [7, 4, 9]
         },
+        
         "color":{
             "value": "g"
         },
+        
         "label":{
             "value": "Graf 1"
         },
+        
         "marker":{
             "value": ">"
         }, 
+        
         "ms":{
             "value": 5
         }, 
+        
         "title":{
             "value": "Test pythons libs"
         }

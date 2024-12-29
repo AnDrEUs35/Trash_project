@@ -3,18 +3,21 @@ import matplotlib.pyplot as plt
 
 class Solver:
     def __init__(self, model_data):
+        # достаём всё необходимое
         self.coords = model_data.get_coords()
         self.plot_args = model_data.get_plot_args()
-        self.fig_parameters = model_data.get_fig_parms()
+        self.fig_parameters = model_data.get_fig_parms() 
     
 
     def run_solve(self, output_path):
-        plt.plot(*self.coords, 
+        # Задание всего необходимого и черчение
+        plt.plot(*self.coords, # распаковочка данных о координатах
                  marker=self.plot_args['marker']['value'],
                  color=self.plot_args['color']['value'],
                  ms=self.plot_args['ms']['value'],
                  label=self.plot_args['label']['value'])
 
+        # Пишем украшульки, если они есть в полученных данных
         if 'grid' in self.fig_parameters:
             plt.grid()
         if 'label' in self.plot_args:
