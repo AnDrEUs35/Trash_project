@@ -11,6 +11,7 @@ FIELDS:
         min: 6
         default: 6
         max: 20
+    
     LONG_X:
         type: integer
         title:
@@ -20,6 +21,7 @@ FIELDS:
                 Изменение размера пространства моделирования вдоль  оси X, обязателен тип
                 данных int
         default: 1
+    
     LONG_Y:
         type: integer
         title:
@@ -29,6 +31,7 @@ FIELDS:
                 Изменение размера пространства моделирования вдоль  оси Y, обязателен тип
                 данных int
         default: 1
+    
     DIMS:
         type: string
         view: radio
@@ -42,6 +45,7 @@ FIELDS:
               name:
                   ru: Трехмерное
         default: THREEDIMS
+    
     REGULARIZE_MESH_FACE_ANGLE:
         type: boolean
         title:
@@ -49,6 +53,7 @@ FIELDS:
         hint:
             ru: Определение механизма уточнения динамической сетки
         default: true
+    
     INPUT_IN_DOUBLEPRECISION:
         type: boolean
         title:
@@ -58,35 +63,41 @@ FIELDS:
                 Определение входной точности чисел, лучше  всегда оставить по умолчанию
                 этот ключ
         default: true
+    
     SnapshotFileBase:
         type: string
         title:
             ru: Название выходных файлов
         default: snap
+    
     TimeLimitCPU:
         type: integer
         units: time
         title:
             ru: Максимальная длительность расчёта
         default: 9000
+    
     UnitVelocity_in_cm_per_s:
         type: decimal
         units: velocity
         title:
             ru: Единицы измерения скорости в "см/с"
         default: 1
+    
     UnitLength_in_cm:
         type: decimal
         units: lenght
         title:
             ru: Единицы измерения длины в "см"
         default: 1
+    
     UnitMass_in_g:
         type: decimal
         units: mass
         title:
             ru: Единицы измерения массы в "г"
         default: 1
+    
     PeriodicBoundariesOn:
         type: integer
         title:
@@ -100,6 +111,7 @@ FIELDS:
                   ru: непереодические
         default: 1
 
+
 STRUCTURE:
     - group:
           key: config
@@ -110,6 +122,7 @@ STRUCTURE:
                     title:
                         ru: Ключи с численными значениями
               - field: NTYPES
+    
     - group:
           key: parameters
           title:
@@ -122,6 +135,7 @@ STRUCTURE:
                 view: dropdown
               - field: SnapshotFileBase
                 width: half
+    
     - group:
           key: IC_data
           title:
@@ -129,6 +143,8 @@ STRUCTURE:
           fields:
               - field: massive_particle
               - field: gas_particles
+
+
 UNITS:
     lenght:
         cm:
@@ -139,6 +155,7 @@ UNITS:
             title:
                 ru: Метры
             cm: 0.001
+    
     mass:
         kg:
             title:
@@ -148,6 +165,7 @@ UNITS:
             title:
                 ru: Граммы
             kg: 0.001
+    
     time:
         min:
             title:
@@ -157,6 +175,7 @@ UNITS:
             title:
                 ru: Секунды
             min: 60
+    
     velocity:
         m/s:
             title:
