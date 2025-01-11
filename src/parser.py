@@ -28,7 +28,6 @@ else:
 # Создание HDF5 файла для записи данных
 with h5py.File('satellites.hdf5', 'w') as hdf:
     for satellite in satellites:
-        # Получение скорости для каждого спутника
         line1 = satellite['line1']
         line2 = satellite['line2']
         
@@ -36,7 +35,7 @@ with h5py.File('satellites.hdf5', 'w') as hdf:
         satrec = Satrec.twoline2rv(line1, line2)
 
         # Используем текущее время для вычисления положения и скорости
-        t = Time.now()  # Текущее время
+        t = Time.now() 
         error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
 
         # Запись данных в HDF5 файл
