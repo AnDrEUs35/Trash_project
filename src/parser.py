@@ -4,6 +4,9 @@ import h5py
 from sgp4.api import Satrec
 from astropy.time import Time
 import sys
+from banner import run
+
+run()
 
 # Функция для получения TLE данных
 def get_tle_data(url):
@@ -12,7 +15,8 @@ def get_tle_data(url):
         tle_data = response.text.splitlines()
         satellites = []
 
-        if len(tle_data) % 3 == 0:
+        # Проверка на кратность 3
+        if len(tle_data) % 3 != 0:
             print("Количество строк не кратно 3")
 
         for i in range(0, len(tle_data) - 2, 3):
@@ -35,8 +39,14 @@ active_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tl
 active_satellites = get_tle_data(active_url)
 
 # Мусор
-debris_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=debris&FORMAT=tle"
+debris_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=fengyun-1c-debris&FORMAT=tle"
 debris_satellites = get_tle_data(debris_url)
+
+# Проверка полученных данных о мусоре
+if not debris_satellites:
+    print("Нет данных о мусоре.")
+else:
+    print(f"Получено {len(debris_satellites)} спутников мусора.")
 
 # Структура для хранения данных
 data = {
@@ -48,18 +58,15 @@ data = {
     }
 }
 
-
+# Обработка активных спутников
 for satellite in active_satellites:
     line1 = satellite['line1']
     line2 = satellite['line2']
     
-
     satrec = Satrec.twoline2rv(line1, line2)
-
 
     t = Time.now() 
     error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
-
 
     data["satellites"].append({
         "name": satellite['name'],
@@ -67,17 +74,15 @@ for satellite in active_satellites:
         "velocity": list(teme_v)  # Преобразуем в список
     })
 
-# Мусор
+# Обработка данных о мусоре
 for index, satellite in enumerate(debris_satellites, start=1):
     line1 = satellite['line1']
     line2 = satellite['line2']
     
-
     satrec = Satrec.twoline2rv(line1, line2)
 
     t = Time.now() 
     error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
-
 
     data["trash"].append({
         "index": index,
