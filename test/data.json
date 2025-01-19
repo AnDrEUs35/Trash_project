@@ -1,0 +1,22 @@
+{
+    "sattelites":[
+    {'vel': [8, 8, 8], 'coords': [100, 100, 100]},
+    {'vel': [7, 7, 7], 'coords': [200, 200, 200]}
+    //etc
+    ],
+    
+    "trashes":[
+    {'vel': [8, 8, 8], 'coords': [300, 300, 300]},
+    {'vel': [7, 7, 7], 'coords': [400, 400, 400]}
+    //etc
+    ],
+    
+    "user_data":[
+    {"time": 30
+    "trashes_on": true,
+    "sattelites_on": false
+    //etc
+    }
+    ]
+        
+}

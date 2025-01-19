@@ -5,8 +5,8 @@ from handler import Handler
 
 
 def run(data, output_path):
-    parser = Parser(3)
-    init_data_path = parser.get_hdf5()
+    parser = Parser(data)
+    init_data_path = parser.get_hdf5(output_path)
     solver = Solver(init_data_path)
     result_data_path = solver.run()
     handler = Handler(result_data_path, output_path)
