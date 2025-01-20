@@ -26,11 +26,25 @@ class Parser:
         vel_sattelite = np.zeros([n_sat, 3], dtype=self.FloatType)
         mass_sat = np.ones(n_sat, dtype=self.FloatType)
         
+        
         #trashes parametrs
         n_tr = len(self.data['trashes'])
         pos_trash = np.zeros([n_tr, 3], dtype=self.FloatType)
         vel_trash = np.zeros([n_tr, 3], dtype=self.FloatType)
         mass_trash = np.ones(n_tr, dtype=self.FloatType)
+        
+        
+        #filling pos and vel of sattelites and trashes
+        for i in range(n_sat):
+            for j in range(3):
+                pos_sattelite[i][j] = self.FloatType(self.data['sattelites'][i]['coords'][j])
+                vel_sattelite[i][j] = self.FloatType(self.data['sattelites'][i]['vel'][j])
+        
+        for i in range(n_tr):
+            for j in range(3):
+                pos_trash[i][j] = self.FloatType(self.data['trashes'][i]['coords'][j])
+                vel_trash[i][j] = self.FloatType(self.data['trashes'][i]['vel'][j])
+        
         
         #open file
         IC = h5py.File('./../test/IC.hdf5', 'w')
