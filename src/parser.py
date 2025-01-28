@@ -8,39 +8,40 @@ from banner import run
 
 run()
 
-# Функция для получения TLE данных
-def get_tle_data(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        tle_data = response.text.splitlines()
-        satellites = []
+class GetData:
+    # Функция для получения TLE данных
+    def get_tle_data(url):
+        response = requests.get(url)
+        if response.status_code == 200:
+            tle_data = response.text.splitlines()
+            satellites = []
 
-        # Проверка на кратность 3
-        if len(tle_data) % 3 != 0:
-            print("Количество строк не кратно 3")
+            # Проверка на кратность 3
+            if len(tle_data) % 3 != 0:
+                print("Количество строк не кратно 3")
 
-        for i in range(0, len(tle_data) - 2, 3):
-            if i + 2 < len(tle_data):
-                satellite = {
-                    "name": tle_data[i].strip(),
-                    "line1": tle_data[i + 1].strip(),
-                    "line2": tle_data[i + 2].strip()
-                }
-                satellites.append(satellite)
-            else:
-                print(f"Пропущена строка {i}, Причина: недостаток данных")
-        return satellites
-    else:
-        print("Ошибка при получении данных")
-        sys.exit()
+            for i in range(0, len(tle_data) - 2, 3):
+                if i + 2 < len(tle_data):
+                    satellite = {
+                        "name": tle_data[i].strip(),
+                        "line1": tle_data[i + 1].strip(),
+                        "line2": tle_data[i + 2].strip()
+                    }
+                    satellites.append(satellite)
+                else:
+                    print(f"Пропущена строка {i}, Причина: недостаток данных")
+            return satellites
+        else:
+            print("Ошибка при получении данных")
+            sys.exit()
 
 # Спутники
 active_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
-active_satellites = get_tle_data(active_url)
+active_satellites = GetData.get_tle_data(active_url)
 
 # Мусор
 debris_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=fengyun-1c-debris&FORMAT=tle"
-debris_satellites = get_tle_data(debris_url)
+debris_satellites = GetData.get_tle_data(debris_url)
 
 # Проверка полученных данных о мусоре
 if not debris_satellites:
@@ -58,6 +59,8 @@ data = {
     }
 }
 
+count = 0
+
 # Обработка активных спутников
 for satellite in active_satellites:
     line1 = satellite['line1']
@@ -73,6 +76,8 @@ for satellite in active_satellites:
         "coords": list(teme_p),  # Преобразуем в список
         "velocity": list(teme_v)  # Преобразуем в список
     })
+
+    count += 1
 
 # Обработка данных о мусоре
 for index, satellite in enumerate(debris_satellites, start=1):
@@ -95,3 +100,5 @@ with open('data.json', 'w') as json_file:
     json.dump(data, json_file, indent=4)
 
 print("Все данные успешно сохранены")
+
+print(count)
