@@ -1,17 +1,19 @@
-from . import parser  
 import json
+from . import parser  # Импортируем модуль parser
 
-def run(data, output_path, front):
+def run(config_path, output_path):
     try:
-        with open(front, "r") as file:
+        # Чтение конфигурации из frontend_output.json
+        with open(config_path, "r") as file:
             config = json.load(file)
 
-        pars = parser.Parser(data, output_path, config)
 
-        pars.filter_and_save_by_config()
+        pars = parser.Parser("./test/data.json", output_path)
+
+        pars.filter_and_save_by_config(config)  # Передаем конфигурацию в метод
 
     except json.JSONDecodeError as e:
-        print(f"Ошибка при декода JSON: {e}")
+        print(f"Ошибка при декодировании JSON: {e}")
         return
     except FileNotFoundError as e:
         print(f"Файл не найден: {e}")
@@ -19,7 +21,6 @@ def run(data, output_path, front):
     except Exception as e:
         print(f"Ошибка: {e}")
         return
-    
 
 if __name__ == "__main__":
-    run(data= "./test/data.json", output_path="./test/result_solv_data", front = "./frontend_output.json")
+    run(config_path="./front_output.json", output_path="./result_solv_data")

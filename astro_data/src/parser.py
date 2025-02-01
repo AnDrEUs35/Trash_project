@@ -87,52 +87,56 @@ class SatelliteProcess:
             json.dump(self.data, json_file, indent=4)
         print("Все данные успешно сохранены")
 
-
 class Parser:
-    def __init__(self, data, output_path, config):
+    def __init__(self, data, output_path):
         self.data = data
         self.output_path = output_path
-        self.config = config
 
     def filter_and_save_by_config(self):
-        # Извлечение параметров из конфигурации
-        object_type = self.config['model']['OBJ_TYPE']['value']  # Тип объекта (спутник или мусор)
-        current_date_str = self.config['time']['DATE']['value']  # Текущая дата
-        current_date = datetime.strptime(current_date_str, "%d.%m.%Y").date()
+        try:
+            # Чтение конфигурации из frontend_output.json
+            with open("./front_output.json", "r") as config_file:
+                config = json.load(config_file)
 
-        # Чтение данных из data.json
-        with open(self.data, 'r') as data_file:
-            data_content = json.load(data_file)
+            # Извлечение параметров из конфигурации
+            object_type = config['model']['OBJ_TYPE']['value']  # Тип объекта (спутник или мусор)
+            current_date_str = config['time']['DATE']['value']  # Текущая дата
+            current_date = datetime.strptime(current_date_str, "%d.%m.%Y").date()
 
-        if not isinstance(data_content, dict):
-            raise ValueError("data.json должен содержать объект.")
+            # Чтение данных из data.json
+            with open(self.data, 'r') as data_file:
+                data_content = json.load(data_file)
 
+            if not isinstance(data_content, dict):
+                raise ValueError("data.json должен содержать объект.")
 
-        # Фильтрация объектов по типу и дате
-        filtered_objects = []
-        if object_type == "satellite":
-            objects_to_filter = data_content.get("satellites", [])
-        elif object_type == "trash":
-            objects_to_filter = data_content.get("trash", [])
-        else:
-            raise ValueError("Неподдерживаемый тип объекта.")
-        
-        for item in objects_to_filter:
-            filtered_objects.append(item)
+            # Фильтрация объектов по типу и дате
+            filtered_objects = []
+            if object_type == "satellite":
+                objects_to_filter = data_content.get("satellites", [])
+            elif object_type == "trash":
+                objects_to_filter = data_content.get("trash", [])
+            else:
+                raise ValueError("Неподдерживаемый тип объекта.")
 
-        # Создание нового JSON с отфильтрованными объектами
-        result = {
-            "config": self.config,
-            "filtered_objects": filtered_objects
-        }
+            for item in objects_to_filter:
+                filtered_objects.append(item)  # Здесь вы можете добавить логику фильтрации по дате
 
-        # Сохранение результатов в новый JSON-файл
-        os.makedirs(self.output_path, exist_ok=True)  # Создание директории, если её нет
-        output_file = f"{self.output_path}/filtered_by_config.json"
-        with open(output_file, 'w') as json_file:
-            json.dump(result, json_file, indent=4)
-        print(f"Отфильтрованные объекты успешно сохранены в {output_file}")
+            # Создание нового JSON с отфильтрованными объектами
+            result = {
+                "config": config,
+                "filtered_objects": filtered_objects
+            }
 
+            # Сохранение результатов в новый JSON-файл
+            os.makedirs(self.output_path, exist_ok=True)  # Создание директории, если её нет
+            output_file = f"{self.output_path}/filtered_by_config.json"
+            with open(output_file, 'w') as json_file:
+                json.dump(result, json_file, indent=4)
+            print(f"Отфильтрованные объекты успешно сохранены в {output_file}")
+
+        except Exception as e:
+            print(f"Ошибка при обработке данных: {e}")
 def main():
     # Спутники
     active_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
