@@ -1,0 +1,207 @@
+FIELDS:
+    WIDTH:
+        type: integer
+        title:
+            ru: Широта
+        hint:
+            ru: Введите широту в градусах, тип данных int
+        min: 0
+        max: 360
+        default: 0
+
+    LONG:
+        type: integer
+        title:
+            ru: Долгота
+        hint:
+            ru: Введите долготу в градусах, тип данных int
+        min: 0
+        max: 360
+        default: 0
+
+    RADIUS:
+        type: integer
+        title:
+            ru: Радиус области моделирования
+        hint:
+            ru: Введите радиус выбранной области в градусах, тип данных int
+        default: 1
+
+    DATE:
+        type: string
+        title:  
+            ru: Дата начала отсчёта
+        hint:
+            ru: Введите дату в виде дд.мм.гггг; Не используйте буквы
+        default: 12.11.2025
+
+    START_TIME:
+        type: string
+        title:  
+            ru: Время начала отсчёта
+        hint:
+            ru: Введите время в виде чч.мм.сс; Не используйте буквы
+        default: 00.00.00
+    
+    DURATION:
+        type: integer
+        title:  
+            ru: Продолжительность моделирования
+        hint:
+            ru: Укажите промежуток времени в секундах, тип данных int
+        default: 100
+
+# Как реализовать список с галочками?
+    OBJ_TYPE:
+        type: string
+        title:  
+            ru: Типы объектов моделирования
+        default: trash
+        enum:
+            - value: satellite
+              name:
+                  ru: Спутник
+            - value: trash
+              name:
+                  ru: Мусор
+        
+    FILE_NAME:
+        type: string
+        title:  
+            ru: Имя файла
+        hint:
+            ru: Введите имя файла
+        default: test
+    
+    # Выпадающий список или цветовая палитра
+    COLOR:
+        type: string
+        title:  
+            ru: Цвет маркера
+        default: 'black'
+        enum:
+            - value: 'black'
+              name:
+                  ru: Чёрный
+            - value: 'red'
+              name:
+                  ru: Красный
+            - value: 'blue'
+              name:
+                  ru: Синий
+            - value: 'green'
+              name:
+                  ru: Зелёный
+
+    # Выпадающий список
+    MARKER_FORM:
+        type: string
+        title:  
+            ru: Форма маркера
+        default: 'o'
+        enum:
+            - value: 'o'
+              name:
+                  ru: Круг
+            - value: 's'
+              name:
+                  ru: Квадрат
+            - value: '*'
+              name:
+                  ru: Звезда
+            - value: 'D'
+              name:
+                  ru: Ромб
+            - value: 'x'
+              name:
+                  ru: X-образный
+
+    MARKER_SIZE:
+        type: integer
+        title:  
+            ru: Размер маркера
+        hint:
+            ru: Введите число для обозначения размера, int
+        default: 5
+
+    # Стиль одинаковый, а цвета такие же, как у маркеров
+    LINE_STYLE:
+        type: string
+        title:  
+            ru: Стиль линии
+        default: '-'
+        enum:
+            - value: '-'
+              name:
+                  ru: Сплошная линия
+            - value: '--'
+              name:
+                  ru: Штриховая линия
+            - value: '-.'
+              name:
+                  ru: Штрих-пунктирная линия
+            - value: ':'
+              name:
+                  ru: Пунктирная линия
+
+    # выпадающий список
+    TYPE_OF_FILE:
+        type: string
+        title:  
+            ru: Тип файла
+        enum:
+            - value: '.png'
+              name:
+                  ru: .png
+            - value: '.gif'
+              name:
+                  ru: .gif
+        default: '.png'
+
+STRUCTURE:
+    - group:
+        key: coords
+        title:  
+            ru: Координаты
+        fields:
+            - field: WIDTH
+            - field: LONG
+            - field: RADIUS
+
+    - group:
+        key: time
+        title:  
+            ru: Задайте время
+        fields:
+            - field: DATE
+            - field: START_TIME
+            - field: DURATION
+
+    - group:
+        key: model
+        title:  
+            ru: Выбираем объекты моделирования
+        fields:
+            - field: OBJ_TYPE
+    - group:
+        key: graf_settings
+        title:  
+            ru: Настройки графика
+        fields:
+            - field: FILE_NAME
+            - field: COLOR
+            - field: MARKER_FORM
+            - field: MARKER_SIZE
+            - field: LINE_STYLE
+            - field: TYPE_OF_FILE
+
+UNITS:
+    length:
+        cm:
+            title:
+                ru: Сантиметры
+            m: 0.001
+        m:
+            title:
+                ru: Метры
+            cm: 100
