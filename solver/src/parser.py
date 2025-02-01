@@ -86,7 +86,7 @@ class Parser:
         part1.create_dataset("Velocities", data=vel_sattelite)
         
         #trash
-        part2.create_dataset("ParticleIDs", data=np.arange(n_sat + 1, n_tr + 1))
+        part2.create_dataset("ParticleIDs", data=np.arange(n_sat + 1, n_sat + n_tr + 1))
         part2.create_dataset("Coordinates", data=pos_trash)
         part2.create_dataset("Masses", data=mass_trash)
         part2.create_dataset("Velocities", data=vel_trash)
