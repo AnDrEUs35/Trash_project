@@ -1,15 +1,15 @@
 #imports
-from parser import Parser
-from solver import Solver
-from handler import Handler
+from . import parser
+from . import solver
+from . import handler
 
 
 def run(data, output_path):
-    parser = Parser(data)
+    parser = parser.Parser(data)
     init_data_path = parser.get_hdf5(output_path)
-    solver = Solver(init_data_path)
+    solver = solver.Solver(init_data_path)
     result_data_path = solver.run()
-    handler = Handler(result_data_path, output_path)
+    handler = handler.Handler(result_data_path, output_path)
     handler.get_graphical_output(parser.get_user_graphical_data())
     
 
