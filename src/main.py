@@ -3,9 +3,7 @@ from parser import Parser
 
 def run(data, output_path):
     parser = Parser(data, output_path)
-    parser.process()
-    parser.save_solv_data()
-    print("Все данные были успешно сохранены")
+    
 
 
 if __name__ == "__main__":
