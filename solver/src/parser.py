@@ -23,19 +23,21 @@ class Parser:
         
         #satellites parametrs
         n_sat = len(self.data['satellites'])
+        sat_names = np.array([self.data['satellites'][i]['name'] for i in range(n_sat)])
         pos_sattelite = np.zeros([n_sat, 3], dtype=self.FloatType)
         vel_sattelite = np.zeros([n_sat, 3], dtype=self.FloatType)
         mass_sat = np.ones(n_sat, dtype=self.FloatType)
         
         
-        #trashes parametrs
+        #trash parametrs
         n_tr = len(self.data['trash'])
+        tr_indexes = np.array([self.data['trash'][i]['index'] for i in range(n_tr)])
         pos_trash = np.zeros([n_tr, 3], dtype=self.FloatType)
         vel_trash = np.zeros([n_tr, 3], dtype=self.FloatType)
         mass_trash = np.ones(n_tr, dtype=self.FloatType)
         
         
-        #filling pos and vel of satellites and trashes
+        #filling pos and vel of satellites and trash
         for i in range(n_sat):
             for j in range(3):
                 pos_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['coords'][j])
@@ -48,12 +50,12 @@ class Parser:
         
         
         #open file
-        IC = h5py.File('/workspaces/Trash_project/test/IC.hdf5', 'w')
+        IC = h5py.File('/workspaces/Trash_project/solver/test/IC.hdf5', 'w')
         
         #creating groups
         header = IC.create_group("Header")
         part1 = IC.create_group("satellites") #
-        part2 = IC.create_group("Trashes") #
+        part2 = IC.create_group("trash") #
         part3 = IC.create_group("Earth") #
         
         #header
@@ -83,8 +85,8 @@ class Parser:
         part1.create_dataset("Masses", data=mass_sat)
         part1.create_dataset("Velocities", data=vel_sattelite)
         
-        #trashes
-        part2.create_dataset("ParticleIDs", data=np.arange(n_sat + 1, n_tr + 1))
+        #trash
+        part2.create_dataset("ParticleIDs", data=np.arange(n_sat + 1, n_sat + n_tr + 1))
         part2.create_dataset("Coordinates", data=pos_trash)
         part2.create_dataset("Masses", data=mass_trash)
         part2.create_dataset("Velocities", data=vel_trash)
