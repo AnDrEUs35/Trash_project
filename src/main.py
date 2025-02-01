@@ -14,4 +14,4 @@ def run(data, output_path):
     
 
 if __name__ == '__main__':
-    run(data='./../test/data.json', output_path='./../test/result_solver_data')
+    run(data='/workspaces/Trash_project/test/data.json', output_path='./../test/result_solver_data')
