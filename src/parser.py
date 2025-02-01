@@ -4,6 +4,8 @@ from sgp4.api import Satrec
 from astropy.time import Time
 import sys
 from banner import run
+import os 
+from datetime import datetime
 
 class Satellite:
     def __init__(self, name, line1, line2):
@@ -84,6 +86,52 @@ class SatelliteProcess:
         with open(file_name, 'w') as json_file:
             json.dump(self.data, json_file, indent=4)
         print("Все данные успешно сохранены")
+
+
+class Parser:
+    def __init__(self, data, output_path, config):
+        self.data = data
+        self.output_path = output_path
+        self.config = config
+
+    def filter_and_save_by_config(self):
+        # Извлечение параметров из конфигурации
+        object_type = self.config['model']['OBJ_TYPE']['value']  # Тип объекта (спутник или мусор)
+        current_date_str = self.config['time']['DATE']['value']  # Текущая дата
+        current_date = datetime.strptime(current_date_str, "%d.%m.%Y").date()
+
+        # Чтение данных из data.json
+        with open(self.data, 'r') as data_file:
+            data_content = json.load(data_file)
+
+        if not isinstance(data_content, dict):
+            raise ValueError("data.json должен содержать объект.")
+
+
+        # Фильтрация объектов по типу и дате
+        filtered_objects = []
+        if object_type == "satellite":
+            objects_to_filter = data_content.get("satellites", [])
+        elif object_type == "trash":
+            objects_to_filter = data_content.get("trash", [])
+        else:
+            raise ValueError("Неподдерживаемый тип объекта.")
+        
+        for item in objects_to_filter:
+            filtered_objects.append(item)
+
+        # Создание нового JSON с отфильтрованными объектами
+        result = {
+            "config": self.config,
+            "filtered_objects": filtered_objects
+        }
+
+        # Сохранение результатов в новый JSON-файл
+        os.makedirs(self.output_path, exist_ok=True)  # Создание директории, если её нет
+        output_file = f"{self.output_path}/filtered_by_config.json"
+        with open(output_file, 'w') as json_file:
+            json.dump(result, json_file, indent=4)
+        print(f"Отфильтрованные объекты успешно сохранены в {output_file}")
 
 def main():
     # Спутники
