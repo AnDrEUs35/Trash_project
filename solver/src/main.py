@@ -10,8 +10,8 @@ def run(data, output_path):
     solve = solver.Solver(init_data_path)
     result_data_path = solve.run()
     handl = handler.Handler(result_data_path, output_path)
-    handl.get_graphical_output(parser.get_user_graphical_data())
-    
+    handl.get_graphical_output(pars.get_user_graphical_data())
+
 
 if __name__ == '__main__':
-    run(data='/workspaces/Trash_project/test/data.json', output_path='./../test/result_solver_data')
+    run(data='/workspaces/Trash_project/astro_data/data.json', output_path='./../test/result_solver_data')
