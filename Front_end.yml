@@ -33,6 +33,7 @@ FIELDS:
             ru: Дата начала отсчёта
         hint:
             ru: Введите дату в виде дд.мм.гггг; Не используйте буквы
+        default: 12.11.2025
 
     START_TIME:
         type: string
@@ -40,6 +41,7 @@ FIELDS:
             ru: Время начала отсчёта
         hint:
             ru: Введите время в виде чч.мм.сс; Не используйте буквы
+        default: 00.00.00
     
     DURATION:
         type: integer
@@ -47,12 +49,14 @@ FIELDS:
             ru: Продолжительность моделирования
         hint:
             ru: Укажите промежуток времени в секундах, тип данных int
+        default: 100
 
 # Как реализовать список с галочками?
     OBJ_TYPE:
         type: string
         title:  
             ru: Типы объектов моделирования
+        default: trash
         enum:
             - value: satellite
               name:
@@ -67,6 +71,7 @@ FIELDS:
             ru: Имя файла
         hint:
             ru: Введите имя файла
+        default: test
     
     # Выпадающий список или цветовая палитра
     COLOR:
@@ -151,6 +156,7 @@ FIELDS:
             - value: '.gif'
               name:
                   ru: .gif
+        default: '.png'
 
 STRUCTURE:
     - group:
