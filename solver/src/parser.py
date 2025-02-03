@@ -3,6 +3,15 @@ import numpy as np
 import h5py
 import json
 
+def to_sphere_system(x,y,z):
+    # z -> y
+    # x -> x
+    # y -> z 
+    z, y = y, z # теперь все четко должно быть
+    r = ( x**2 + y**2 + z**2 )**0.5 # радиус вектор 
+    polar = np.atan( (( x**2 + y**2)**0.5) / z ) * 180 / np.pi # зенит в градусах 
+    phi = np.atan2(y, x) * 180 / np.pi #азимут в граудусах 
+    return r, polar, phi
 
 class Parser:
     
@@ -15,7 +24,7 @@ class Parser:
     
     def get_hdf5(self, output_path):
         #return './../test/IC.hdf5'
-        
+        global  pos_sattelite, mass_sat, vel_sattelite, pos_trash, vel_trash, mass_trash
         #Earth parametrs
         mass_earth = np.array([5.6e24])
         pos_earth = np.zeros([1, 3], dtype=self.FloatType)
@@ -99,6 +108,10 @@ class Parser:
         
         # close file
         IC.close()
+    
+        # НАЧАЛО ДЛЯ 2D
         
     def get_user_graphical_data(self):
-        print('hello')
+        satelites_in_sphere_system = [to_sphere_system(x,y,z) for x,y,z in pos_sattelite]
+        trash_in_sphere_system = [to_sphere_system(x,y,z) for x,y,z in pos_trash]
+        print(satelites_in_sphere_system[0])
