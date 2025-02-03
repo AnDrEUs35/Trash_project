@@ -5,7 +5,7 @@ from . import handler
 
 
 def run(data, output_path):
-    pars = parser.Parser( './../../' + data)
+    pars = parser.Parser( './' + data) #/workspaces/Trash_project/astro_data/data.json
     init_data_path = pars.get_hdf5(output_path)
     solve = solver.Solver(init_data_path)
     result_data_path = solve.run()

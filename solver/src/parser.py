@@ -101,4 +101,4 @@ class Parser:
         IC.close()
         
     def get_user_graphical_data(self):
-        pass
+        print('hello')
