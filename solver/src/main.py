@@ -14,7 +14,7 @@ def run(data, output_path):
     handl.get_graphical_output(pars.get_user_graphical_data())
 
     map_creating = map_of_trash.Map('./' + data)
-    map_creating.get_map((54.741906, -70.492995), 10000)
+    map_creating.get_map((54.741906, 70.492995), 10000)
 
     
 
