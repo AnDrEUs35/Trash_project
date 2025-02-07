@@ -57,6 +57,7 @@ class Graphica3D:
         part1 = IC.create_group("satellites") #
         part2 = IC.create_group("trash") #
         part3 = IC.create_group("Earth") #
+        part4 = IC.create_group("User_satellite") #
         
         #header
         NumPart = np.array([0, 1, n_tr, 0, 0, 0], dtype = self.IntType)
@@ -96,6 +97,9 @@ class Graphica3D:
         part3.create_dataset("Coordinates", data=pos_earth)
         part3.create_dataset("Masses", data=mass_earth)
         part3.create_dataset("Velocities", data=vel_earth)
+
+        #User_satellite
+        part4
         
         # close file
         IC.close()
