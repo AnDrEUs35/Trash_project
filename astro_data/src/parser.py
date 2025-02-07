@@ -3,7 +3,6 @@ import json
 from sgp4.api import Satrec
 from astropy.time import Time
 import sys
-from . import banner
 import os 
 from datetime import datetime
 
@@ -94,44 +93,63 @@ class Parser:
         self.output_path = output_path
         self.config = config
 
-    def filter_and_save_by_config(self):
-        # Извлечение параметров из конфигурации
-        object_type = self.config['model']['OBJ_TYPE']['value']  # Тип объекта (спутник или мусор)
-        current_date_str = self.config['time']['DATE']['value']  # Текущая дата
-        current_date = datetime.strptime(current_date_str, "%d.%m.%Y").date()
+    def parse_frontend_output(self):
+        """
+        Добавляет данные из frontend_output.json в data.json, не перезаписывая их.
+        """
+        try:
+            # Чтение данных из frontend_output.json
+            with open('./astro_data/test/frontend_output.json', 'r') as frontend_file:
+                frontend_data = json.load(frontend_file)
 
-        # Чтение данных из data.json
-        with open(self.data, 'r') as data_file:
-            data_content = json.load(data_file)
+            # Чтение существующих данных из data.json (если файл существует)
+            if os.path.exists(self.data):
+                with open(self.data, 'r') as data_file:
+                    existing_data = json.load(data_file)
+            else:
+                existing_data = {
+                    "satellites": [],
+                    "trash": [],
+                    "user_properties": {
+                        "time": 20,
+                        "time_step": 4,
+                    }
+                }
 
-        if not isinstance(data_content, dict):
-            raise ValueError("data.json должен содержать объект.")
+            # Добавление данных из frontend_output.json в существующие данные
+            if isinstance(frontend_data, dict) and isinstance(existing_data, dict):
+                # Пример: если frontend_data содержит ключ "objects", добавляем их в existing_data
+                if "objects" in frontend_data:
+                    for item in frontend_data["objects"]:
+                        if item.get("type") == "satellite":
+                            existing_data["satellites"].append({
+                                "name": item.get("name"),
+                                "coords": item.get("coordinates"),
+                                "velocity": item.get("velocity"),
+                            })
+                        elif item.get("type") == "trash":
+                            existing_data["trash"].append({
+                                "index": len(existing_data["trash"]) + 1,
+                                "coords": item.get("coordinates"),
+                                "velocity": item.get("velocity"),
+                            })
+                else:
+                    # Если frontend_data не содержит "objects", просто объединяем словари
+                    existing_data.update(frontend_data)
+            else:
+                print("Ошибка: данные в frontend_output.json или data.json не являются словарями.")
+                return
 
-
-        # Фильтрация объектов по типу и дате
-        filtered_objects = []
-        if object_type == "satellite":
-            objects_to_filter = data_content.get("satellites", [])
-        elif object_type == "trash":
-            objects_to_filter = data_content.get("trash", [])
-        else:
-            raise ValueError("Неподдерживаемый тип объекта.")
-        
-        for item in objects_to_filter:
-            filtered_objects.append(item)
-
-        # Создание нового JSON с отфильтрованными объектами
-        result = {
-            "config": self.config,
-            "filtered_objects": filtered_objects
-        }
-
-        # Сохранение результатов в новый JSON-файл
-        os.makedirs(self.output_path, exist_ok=True)  # Создание директории, если её нет
-        output_file = f"{self.output_path}/filtered_by_config.json"
-        with open(output_file, 'w') as json_file:
-            json.dump(result, json_file, indent=4)
-        print(f"Отфильтрованные объекты успешно сохранены в {output_file}")
+            # Сохранение обновленных данных в data.json
+            with open(self.data, 'w') as data_file:
+                json.dump(existing_data, data_file, indent=4)
+            print(f"Данные из frontend_output.json успешно добавлены в {self.data}")
+        except FileNotFoundError:
+            print("Файл frontend_output.json не найден.")
+        except json.JSONDecodeError:
+            print("Ошибка при чтении JSON из frontend_output.json.")
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
 
 def main():
     # Спутники
@@ -147,8 +165,10 @@ def main():
     processor.process_trash(debris_satellites)
     processor.save()
 
+    parser = Parser(data='data.json', output_path='output')
+    parser.parse_frontend_output()
+
     print("Все данные были успешно записаны")
 
 if __name__ == "__main__":
-    banner.run()
     main()
