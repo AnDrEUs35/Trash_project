@@ -2,6 +2,7 @@
 from . import parser
 from . import solver
 from . import handler
+from . import map_of_trash
 
 
 def run(data, output_path):
@@ -11,7 +12,10 @@ def run(data, output_path):
     result_data_path = solve.run()
     handl = handler.Handler(result_data_path, output_path)
     handl.get_graphical_output(pars.get_user_graphical_data())
-    pars.get_map((54.741906,20.492995), 400)
+
+    map_creating = map_of_trash.Map('./' + data)
+    map_creating.get_map((54.741906, -70.492995), 10000)
+
     
 
 if __name__ == '__main__':
