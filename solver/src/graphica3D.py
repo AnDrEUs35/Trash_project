@@ -4,7 +4,7 @@ import h5py
 import json
 
 
-class Parser:
+class Graphica3D:
     
     def __init__(self, data):
         self.BoxSize = 500
