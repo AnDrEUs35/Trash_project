@@ -55,11 +55,10 @@ class Map:
         for i in range(n_tr):
             for j in range(3):
                 self.pos_trash[i][j] = self.FloatType(self.data['trash'][i]['coords'][j])
-    
 
         # НАЧАЛО ДЛЯ 2D
     def get_map(self, person_location, radius_km):
-        pos_sattelite = self.pos_sattelite 
+        pos_sattelite = list(self.pos_sattelite) + list(self.pos_trash) #спутники и мусор
         points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite] 
 
                 # Фильтрация точек в радиусе
