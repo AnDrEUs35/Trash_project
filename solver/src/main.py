@@ -11,7 +11,7 @@ def run(data, output_path):
     result_data_path = solve.run()
     handl = handler.Handler(result_data_path, output_path)
     handl.get_graphical_output(pars.get_user_graphical_data())
-    pars.get_map((55.7558, 37.6173), 7000)
+    pars.get_map((54.741906,20.492995), 200)
     
 
 if __name__ == '__main__':
