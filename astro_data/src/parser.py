@@ -81,17 +81,16 @@ class SatelliteProcess:
                 "velocity": satellite.velocity 
             })
 
-    def save(self, file_name='data.json'):
+    def save(self, file_name='./astro_data/data.json'):
+        # Сохраняем данные в файл
         with open(file_name, 'w') as json_file:
             json.dump(self.data, json_file, indent=4)
-        print("Все данные успешно сохранены")
+        print(f"Все данные успешно сохранены в {file_name}")
 
 
 class Parser:
-    def __init__(self, data, output_path, config):
+    def __init__(self, data):
         self.data = data
-        self.output_path = output_path
-        self.config = config
 
     def parse_frontend_output(self):
         """
@@ -99,12 +98,12 @@ class Parser:
         """
         try:
             # Чтение данных из frontend_output.json
-            with open('./astro_data/test/frontend_output.json', 'r') as frontend_file:
+            with open(self.data, 'r') as frontend_file:
                 frontend_data = json.load(frontend_file)
 
             # Чтение существующих данных из data.json (если файл существует)
-            if os.path.exists(self.data):
-                with open(self.data, 'r') as data_file:
+            if os.path.exists('./astro_data/data.json'):
+                with open('./astro_data/data.json', 'r') as data_file:
                     existing_data = json.load(data_file)
             else:
                 existing_data = {
@@ -141,9 +140,9 @@ class Parser:
                 return
 
             # Сохранение обновленных данных в data.json
-            with open(self.data, 'w') as data_file:
+            with open('./astro_data/data.json', 'w') as data_file:
                 json.dump(existing_data, data_file, indent=4)
-            print(f"Данные из frontend_output.json успешно добавлены в {self.data}")
+            print(f"Данные из frontend_output.json успешно добавлены в {'./astro_data/data.json'}")
         except FileNotFoundError:
             print("Файл frontend_output.json не найден.")
         except json.JSONDecodeError:
@@ -151,7 +150,24 @@ class Parser:
         except Exception as e:
             print(f"Произошла ошибка: {e}")
 
-def main():
+def main(data):
+    # Чтение данных из frontend_output.json
+    try:
+        with open('./astro_data/test/frontend_output.json', 'r') as frontend_file:
+            frontend_data = json.load(frontend_file)
+    except FileNotFoundError:
+        print("Файл frontend_output.json не найден.")
+        return
+    except json.JSONDecodeError:
+        print("Ошибка при чтении JSON из frontend_output.json.")
+        return
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+        return
+
+    # Получение значения OBJ_TYPE
+    obj_type = frontend_data.get("model", {}).get("OBJ_TYPE", {}).get("value", "")
+
     # Спутники
     active_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
     active_satellites = TLEFetch.get_tle_data(active_url)
@@ -161,11 +177,21 @@ def main():
     debris_satellites = TLEFetch.get_tle_data(debris_url)
 
     processor = SatelliteProcess()
-    processor.process_satellite(active_satellites)
-    processor.process_trash(debris_satellites)
-    processor.save()
 
-    parser = Parser(data='data.json', output_path='output')
+    # В зависимости от OBJ_TYPE выбираем, какие данные обрабатывать
+    if obj_type == "satellite":
+        processor.process_satellite(active_satellites)
+    elif obj_type == "trash":
+        processor.process_trash(debris_satellites)
+    else:
+        # Если OBJ_TYPE не указан или имеет другое значение, обрабатываем все данные
+        processor.process_satellite(active_satellites)
+        processor.process_trash(debris_satellites)
+
+    # Сохраняем данные в ./astro_data/data.json
+    processor.save('./astro_data/data.json')
+
+    parser = Parser(data=data)
     parser.parse_frontend_output()
 
     print("Все данные были успешно записаны")

@@ -1,14 +1,9 @@
 from . import parser  
 import json
 
-def run(data, output_path, front):
+def run(data):
     try:
-        with open(front, "r") as file:
-            config = json.load(file)
-
-        pars = parser.Parser(data, output_path, config)
-
-        pars.filter_and_save_by_config()
+        parser.main(data)
 
     except json.JSONDecodeError as e:
         print(f"Ошибка при декода JSON: {e}")
@@ -22,4 +17,4 @@ def run(data, output_path, front):
     
 
 if __name__ == "__main__":
-    run(data= "./test/data.json", output_path="./test/result_solv_data", front = "./frontend_output.json")
+    run(data= "./astro_data/test/frontend_output.json")
