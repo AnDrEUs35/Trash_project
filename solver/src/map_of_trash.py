@@ -29,18 +29,23 @@ def project_orbit_to_earth(x, y, z, R=6371):
 
 
 class Map:
-    def __init__(self, data):
+    def __init__(self):
         self.satellites_start = []
         self.debris_start = []
         self.satellites_end = []
         self.debris_end = []
-        self.data = data
 
-    def get_info(self):
-        with h5py.File(self.data, 'r') as file:
+    def get_info_start(self, data):
+        with h5py.File(data, 'r') as file:
             self.satellites_start = list(file['satellites']['Coordinates'])
             self.debris_start = list(file['trash']['Coordinates'])
         
+    def get_info_end(self, data):
+        with h5py.File(data, 'r') as file:
+            self.satellites_end = list(file['satellites']['Coordinates'])
+            self.debris_end = list(file['trash']['Coordinates'])
+
+    
         # НАЧАЛО ДЛЯ 2D
     def get_map(self, person_location, radius_km):
         if radius_km < 1:
