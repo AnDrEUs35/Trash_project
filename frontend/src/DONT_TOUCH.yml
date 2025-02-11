@@ -36,7 +36,7 @@ FIELDS:
             ru: Дата начала отсчёта
         hint:
             ru: Введите дату в виде дд.мм.гггг; Не используйте буквы
-        default: 01.01.2000
+        default: 01.01.2025
 
     START_TIME:
         type: string
