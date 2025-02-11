@@ -15,8 +15,12 @@ def change_time(path):
     now = f'{now.day}.{now.month}.{now.year}'
 
     data['FIELDS']['DATE']['default'] = now
-    with open("frontend/src/test.yml", "w", encoding="UTF-8") as f:
+    with open("frontend/src/config.yml", "w", encoding="UTF-8") as f:
         yaml.dump(data, f, allow_unicode=True)
+
+def start(path):
+    change_time('/workspaces/Trash_project/frontend/src/config.yml')
+    run_validator(path)
         
 
 if __name__=='__main__':

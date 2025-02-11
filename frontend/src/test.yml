@@ -27,7 +27,7 @@ FIELDS:
       ru: Цвет маркера
     type: string
   DATE:
-    default: 10.2.2025
+    default: 11.2.2025
     hint:
       ru: Введите дату в виде дд.мм.гггг; Не используйте буквы
     title:
