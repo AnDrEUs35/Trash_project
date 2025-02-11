@@ -58,6 +58,9 @@ class Map:
 
         # НАЧАЛО ДЛЯ 2D
     def get_map(self, person_location, radius_km):
+        if radius_km < 1:
+            radius_km = 1 # Защита от бед
+            
         pos_sattelite = list(self.pos_sattelite) + list(self.pos_trash) #спутники и мусор
         points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite] 
 

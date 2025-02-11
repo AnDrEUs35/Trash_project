@@ -15,8 +15,8 @@ def run(data, output_path):
 
     map_creating = map_of_trash.Map('./' + data)
     map_creating.get_info()
-    map_creating.get_map((54.741906, 70.492995), 10000)
-    map_creating.call()
+    map_creating.get_map((54.741906, -90.492995), 1)
+
 
 
     
