@@ -91,15 +91,13 @@ class Parser:
         self.data = data
         self.output_path = output_path
 
-    def filter_and_save_by_config(self):
+    def filter_and_save_by_config(self, config):
         try:
-            # Чтение конфигурации из frontend_output.json
-            with open("./front_output.json", "r") as config_file:
-                config = json.load(config_file)
-
             # Извлечение параметров из конфигурации
-            object_type = config['model']['OBJ_TYPE']['value']  # Тип объекта (спутник или мусор)
-            current_date_str = config['time']['DATE']['value']  # Текущая дата
+            if 'main_settings' not in config:
+                raise KeyError("Отсутствует ключ 'main_settings' в конфигурации.")
+            
+            current_date_str = config['main_settings']['DATE']['value']  # Текущая дата
             current_date = datetime.strptime(current_date_str, "%d.%m.%Y").date()
 
             # Чтение данных из data.json
@@ -109,17 +107,19 @@ class Parser:
             if not isinstance(data_content, dict):
                 raise ValueError("data.json должен содержать объект.")
 
-            # Фильтрация объектов по типу и дате
+            # Определение типа объектов для фильтрации
             filtered_objects = []
-            if object_type == "satellite":
+            if config['main_settings']['SATELITE_TYPE']['value']:
                 objects_to_filter = data_content.get("satellites", [])
-            elif object_type == "trash":
+            elif config['main_settings']['TRASH_TYPE']['value']:
                 objects_to_filter = data_content.get("trash", [])
             else:
-                raise ValueError("Неподдерживаемый тип объекта.")
+                raise ValueError("Не указан тип объекта для фильтрации.")
 
+            # Фильтрация объектов по дате (если необходимо)
             for item in objects_to_filter:
-                filtered_objects.append(item)  # Здесь вы можете добавить логику фильтрации по дате
+                # Здесь можно добавить логику фильтрации по дате, если это требуется
+                filtered_objects.append(item)
 
             # Создание нового JSON с отфильтрованными объектами
             result = {

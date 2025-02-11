@@ -1,13 +1,13 @@
 import json
 from . import parser  # Импортируем модуль parser
 
-def run(config_path, output_path):
+def run(config_path):
     try:
         # Чтение конфигурации из frontend_output.json
         with open(config_path, "r") as file:
             config = json.load(file)
 
-
+        output_path = "./result_solv_data"  # Установите значение output_path здесь
         pars = parser.Parser("./test/data.json", output_path)
 
         pars.filter_and_save_by_config(config)  # Передаем конфигурацию в метод
@@ -23,4 +23,4 @@ def run(config_path, output_path):
         return
 
 if __name__ == "__main__":
-    run(config_path="./front_output.json", output_path="./result_solv_data")
+    run(config_path="./front_output.json")
