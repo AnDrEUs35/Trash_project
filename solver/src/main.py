@@ -13,9 +13,10 @@ def run(data, output_path):
     handl = handler.Handler(result_data_path, output_path)
     handl.get_graphical_output(pars.get_user_graphical_data())
 
-    map_creating = map_of_trash.Map('./' + data)
+    map_creating = map_of_trash.Map('/workspaces/Trash_project/IC.hdf5')
     map_creating.get_info()
-    map_creating.get_map((54.741906, -90.492995), 1)
+    map_creating.get_map((54.741906, -90.492995), 1000)
+    map_creating.get_tracer((54.741906, -90.492995), 1000)
 
 
 
