@@ -7,7 +7,7 @@ def run(config_path):
         with open(config_path, "r") as file:
             config = json.load(file)
 
-        output_path = "./result_solv_data"  # Установите значение output_path здесь
+        output_path = './astro_data/data_output'  # Установите значение output_path здесь
         pars = parser.Parser("./test/data.json", output_path)
 
         pars.filter_and_save_by_config(config)  # Передаем конфигурацию в метод

@@ -129,7 +129,7 @@ class Parser:
 
             # Сохранение результатов в новый JSON-файл
             os.makedirs(self.output_path, exist_ok=True)  # Создание директории, если её нет
-            output_file = f"{self.output_path}/filtered_by_config.json"
+            output_file = f"{self.output_path}/data.json"
             with open(output_file, 'w') as json_file:
                 json.dump(result, json_file, indent=4)
             print(f"Отфильтрованные объекты успешно сохранены в {output_file}")
