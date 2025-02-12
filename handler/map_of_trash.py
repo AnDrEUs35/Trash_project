@@ -1,11 +1,11 @@
 #imports
 import numpy as np
-import json
 import math
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from geopy.distance import geodesic
+import h5py
 
 def project_orbit_to_earth(x, y, z, R=6371):
     """
@@ -29,39 +29,29 @@ def project_orbit_to_earth(x, y, z, R=6371):
 
 
 class Map:
-    def __init__(self, data):
-        self.FloatType = np.float64
-        self.IntType = np.int32
-        self.pos_sattelite = []
-        self.pos_trash = []
-        with open(data, 'r') as file:
-            self.data = json.load(file)
+    def __init__(self):
+        self.satellites_start = []
+        self.debris_start = []
+        self.satellites_end = []
+        self.debris_end = []
 
-    def get_info(self):
-        #satellites parametrs
-        n_sat = len(self.data['satellites'])
-        sat_names = np.array([self.data['satellites'][i]['name'] for i in range(n_sat)])
-        self.pos_sattelite = np.zeros([n_sat, 3], dtype=self.FloatType)
+    def get_info_start(self, data):
+        with h5py.File(data, 'r') as file:
+            self.satellites_start = list(file['PartType1']['Coordinates'])
+            self.debris_start = list(file['PartType2']['Coordinates'])
         
-        #trash parametrs
-        n_tr = len(self.data['trash'])
-        self.pos_trash = np.zeros([n_tr, 3], dtype=self.FloatType) 
+    def get_info_end(self, data):
+        with h5py.File(data, 'r') as file:
+            self.satellites_end = list(file['PartType1']['Coordinates'])
+            self.debris_end = list(file['PartType2']['Coordinates'])
 
-        #filling pos of satellites and trash
-        for i in range(n_sat):
-            for j in range(3):
-                self.pos_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['coords'][j])
-        
-        for i in range(n_tr):
-            for j in range(3):
-                self.pos_trash[i][j] = self.FloatType(self.data['trash'][i]['coords'][j])
 
         # НАЧАЛО ДЛЯ 2D
     def get_map(self, person_location, radius_km):
         if radius_km < 1:
             radius_km = 1 # Защита от бед
             
-        pos_sattelite = list(self.pos_sattelite) + list(self.pos_trash) #спутники и мусор
+        pos_sattelite = list(self.satellites_start) + list(self.debris_start) #спутники и мусор
         points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite] 
 
                 # Фильтрация точек в радиусе
@@ -133,3 +123,83 @@ class Map:
         #plt.axis('equal')  # Делаем оси равными, чтобы картинка была квадратной
         plt.savefig('result')
 
+    def get_tracer(self,person_location,radius_km):
+        if radius_km < 1:
+            radius_km = 1 # Защита от бед
+        # Списки спутников и мусора (начала и конца)
+        #points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite] 
+        satellites_start = [project_orbit_to_earth(x, y, z,) for x, y, z in self.satellites_start] # Начальные координаты спутников
+        satellites_end = [project_orbit_to_earth(x, y, z,) for x, y, z in self.satellites_end]     # Конечные координаты спутников
+        debris_start = [project_orbit_to_earth(x, y, z,) for x, y, z in self.debris_start]         # Начальные координаты мусора
+        debris_end = [project_orbit_to_earth(x, y, z,) for x, y, z in self.debris_end]             # Конечные координаты мусора
+
+                # Вычисляем ширину и долготу эквивалентную радиусу
+        lat_per_km = 1 / 111.0  # 1 градус широты в км
+        long_per_km = lat_per_km * np.cos(np.radians(person_location[0]))  # 1 градус долготы в км
+
+        # Расчёт buffer в градусах
+        buffer_lat = radius_km * lat_per_km
+        buffer_long = radius_km * long_per_km
+
+        if radius_km > 20000:  # Настройка предела, например, 20000 км
+                # Установка границ карты
+                extent = [-180, 180, -90, 90]
+        else:
+            extent = [
+                person_location[1] - buffer_long,
+                person_location[1] + buffer_long,
+                person_location[0] - buffer_lat,
+                person_location[0] + buffer_lat
+            ]
+
+        # Создаем карту
+        fig = plt.figure(figsize=(10, 10), dpi=200)  
+        ax = plt.axes(projection=ccrs.PlateCarree())
+
+        # Устанавливаем границы карты
+        ax.set_extent(extent, crs=ccrs.PlateCarree())
+
+        # Добавляем основной фон карты
+        ax.add_feature(cfeature.BORDERS)
+        ax.add_feature(cfeature.COASTLINE)
+        ax.add_feature(cfeature.LAND)
+        ax.add_feature(cfeature.LAKES, edgecolor='black')
+        ax.add_feature(cfeature.RIVERS)
+
+       # Функция для отрисовки линий
+        def plot_lines(start_coords, end_coords, color, label):
+            for start, end in zip(start_coords, end_coords):
+                start_lat, start_lon = start
+                end_lat, end_lon = end
+                # Рисуем линии между начальными и конечными координатами
+                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=2, label=label)
+                # Отображаем начальную и конечную точки
+                ax.scatter(start_lon, start_lat, color=color, marker='o', s=100, transform=ccrs.PlateCarree(), label=None)
+                ax.scatter(end_lon, end_lat, color=color, marker='s', s=100, transform=ccrs.PlateCarree(), label=None)
+
+         # Отображаем местоположение человека
+        ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
+
+        # Отображаем линии для спутников
+        plot_lines(satellites_start, satellites_end, 'blue', 'Спутники')
+
+        # Отображаем линии для мусора
+        plot_lines(debris_start, debris_end, 'red', 'Мусор')
+
+        # Добавляем сетку (широта и долгота)
+        gridlines = ax.gridlines(draw_labels=True, linestyle='--', color='gray', alpha=0.5)
+        gridlines.xlabels_top = False
+        gridlines.ylabels_right = False
+
+        # Заголовок и легенда
+        ax.set_title(f'Карта вокруг человека на координатах {person_location} с радиусом {radius_km} км', fontsize=13)
+        plt.legend(loc='upper right')
+        # Добавляем легенду
+        handles, labels = ax.get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        ax.legend(by_label.values(), by_label.keys())
+        # Устанавливаем аспект (чтобы карта была квадратной)
+        ax.set_aspect('equal', adjustable='datalim')
+
+        # Показать карту
+        plt.savefig('more_lists')
