@@ -423,23 +423,15 @@ class Validator:
                     raise ValueError
 ```
 
-В методе 'name_examination' происходит проверка на количество символов в названии файла (их не должно быть меньше 4).
-```python
-    def name_examination(self):
-            name = self.data["graf_settings"]["FILE_NAME"]["value"]
-            if len(name) < 4:
-                print(f'Ошибка в значении "{name}"')
-                raise ValueError
-```
-
 Остался последний, вспомогательный, метод - '__is_number'. Он используется в основных методах для выяснения,
 являются ли строки, извлечённые из данных через '.split()', целыми числами.
 ```python
-    def name_examination(self):
-            name = self.data["graf_settings"]["FILE_NAME"]["value"]
-            if len(name) < 4:
-                print(f'Ошибка в значении "{name}"')
-                raise ValueError
+    def __is_number(self, a):
+        try:
+            int(a)
+            return True
+        except ValueError:
+            return False
 ```
 
 ### Запуск валидатора и установка по умолчанию актуальной даты
@@ -449,10 +441,6 @@ def run_validator(data_path):
     valid = validator.Validator(data_path)
     valid.date_examination()
     valid.start_time_examination()
-
-def start(path):
-    change_time('/workspaces/Trash_project/frontend/src/config.yml')
-    run_validator(path)
 ```
 Запуск происходит из основного файла путём вызова функции start(). 
 

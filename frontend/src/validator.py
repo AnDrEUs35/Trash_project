@@ -48,11 +48,11 @@ class Validator:
                     print(f'Ошибка значения во времени отсчёта: "{start_time}"')
                     raise ValueError
         
-    def name_examination(self):
-        name = self.data["graf_settings"]["FILE_NAME"]["value"]
-        if len(name) < 4:
-            print(f'Ошибка в значении имени файла: "{name}"')
-            raise ValueError
+    # def name_examination(self): # Это ненужный метод
+    #     name = self.data["graf_settings"]["FILE_NAME"]["value"]
+    #     if len(name) < 4:
+    #         print(f'Ошибка в значении имени файла: "{name}"')
+    #         raise ValueError
 
     def __is_number(self, a):
         try:
@@ -65,5 +65,5 @@ if __name__ == '__main__':
     validator = Validator(data='test/frontend_output_bug.json')
     validator.start_time_examination()
     validator.date_examination()
-    validator.name_examination()
+
     
