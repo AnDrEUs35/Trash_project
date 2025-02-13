@@ -7,10 +7,14 @@ import cartopy.feature as cfeature
 from geopy.distance import geodesic
 import h5py
 
+
 def project_orbit_to_earth(x, y, z, R=6371):
     """
     Проецирует точку с орбиты на поверхность Земли и возвращает географические координаты"""
     # 1. Координаты проекции на поверхности Земли
+    x-=75000
+    y-=75000  #только из-за смещения земли в координатной системе
+    z-=75000
     z, y = y, z # теперь все четко должно быть
     magnitude = math.sqrt(x**2 + y**2 + z**2)
     x_proj = (x / magnitude) * R
@@ -53,7 +57,7 @@ class Map:
             radius_km = 1 # Защита от бед
             
         pos_sattelite = list(self.satellites_start) + list(self.debris_start) #спутники и мусор
-        points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite] 
+        points = [project_orbit_to_earth(x, y, z) for x, y, z in pos_sattelite] 
 
                 # Фильтрация точек в радиусе
         in_visibility = []  # Для точек в радиусе
@@ -160,6 +164,8 @@ class Map:
         # Устанавливаем границы карты
         ax.set_extent(extent, crs=ccrs.PlateCarree())
 
+        # Устанавливаем аспект (чтобы карта была квадратной)
+        ax.set_aspect('equal', adjustable='datalim')
         # Добавляем основной фон карты
         ax.add_feature(cfeature.BORDERS)
         ax.add_feature(cfeature.COASTLINE)
@@ -173,10 +179,10 @@ class Map:
                 start_lat, start_lon = start
                 end_lat, end_lon = end
                 # Рисуем линии между начальными и конечными координатами
-                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=2, label=label)
+                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=0.5, label=label)
                 # Отображаем начальную и конечную точки
-                ax.scatter(start_lon, start_lat, color=color, marker='o', s=100, transform=ccrs.PlateCarree(), label=None)
-                ax.scatter(end_lon, end_lat, color=color, marker='s', s=100, transform=ccrs.PlateCarree(), label=None)
+                #ax.scatter(start_lon, start_lat, color=color, marker='o', s=100, transform=ccrs.PlateCarree(), label=None)
+                #ax.scatter(end_lon, end_lat, color=color, marker='s', s=100, transform=ccrs.PlateCarree(), label=None)
 
          # Отображаем местоположение человека
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
@@ -198,9 +204,9 @@ class Map:
         # Добавляем легенду
         handles, labels = ax.get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
-        ax.legend(by_label.values(), by_label.keys())
-        # Устанавливаем аспект (чтобы карта была квадратной)
-        ax.set_aspect('equal', adjustable='datalim')
+        ax.legend(by_label.values(), by_label.keys(),loc='upper right' )
+        
+        ax.apply_aspect()
 
         # Показать карту
         plt.savefig(f'{self.output_path}/more_lists')
