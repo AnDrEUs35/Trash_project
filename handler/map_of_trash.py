@@ -98,16 +98,20 @@ class Map:
         ax.set_extent(extent, crs=ccrs.PlateCarree())
 
         # Добавляем основной фон карты
+        ax.stock_img()
         ax.add_feature(cfeature.BORDERS)
         ax.add_feature(cfeature.COASTLINE)
         ax.add_feature(cfeature.LAND)
         ax.add_feature(cfeature.LAKES, edgecolor='black')
         ax.add_feature(cfeature.RIVERS)
+        rivers_50m = cfeature.NaturalEarthFeature('physical', 'rivers_lake_centerlines', '10m')
+        ax.add_feature(rivers_50m, facecolor='None', edgecolor='b')
+
 
         # Отображаем точки в пределах видимости
         if in_visibility:
             in_visibility_lats, in_visibility_longs = zip(*in_visibility)
-            ax.scatter(in_visibility_longs, in_visibility_lats, color='blue', label='В радиусе видимости', alpha=0.7, transform=ccrs.PlateCarree())
+            ax.scatter(in_visibility_longs, in_visibility_lats, color='purple', label='В радиусе видимости', alpha=0.7, transform=ccrs.PlateCarree())
 
         # Отображаем местоположение человека
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
@@ -167,11 +171,14 @@ class Map:
         # Устанавливаем аспект (чтобы карта была квадратной)
         ax.set_aspect('equal', adjustable='datalim')
         # Добавляем основной фон карты
+        ax.stock_img()
         ax.add_feature(cfeature.BORDERS)
         ax.add_feature(cfeature.COASTLINE)
         ax.add_feature(cfeature.LAND)
         ax.add_feature(cfeature.LAKES, edgecolor='black')
         ax.add_feature(cfeature.RIVERS)
+        rivers_50m = cfeature.NaturalEarthFeature('physical', 'rivers_lake_centerlines', '10m')
+        ax.add_feature(rivers_50m, facecolor='None', edgecolor='b')
 
        # Функция для отрисовки линий
         def plot_lines(start_coords, end_coords, color, label):
@@ -188,7 +195,7 @@ class Map:
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
 
         # Отображаем линии для спутников
-        plot_lines(satellites_start, satellites_end, 'blue', 'Спутники')
+        plot_lines(satellites_start, satellites_end, 'purple', 'Спутники')
 
         # Отображаем линии для мусора
         plot_lines(debris_start, debris_end, 'red', 'Мусор')
