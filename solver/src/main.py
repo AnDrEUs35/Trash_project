@@ -3,7 +3,7 @@ from . import config_creator
 
 
 def run(data_path, output_path):
-    graph = config_cretor.Config_creator(data_path, output_path)
+    graph = config_creator.Config_creator(data_path, output_path)
     init_data_path = graph.get_hdf5()
 
 
