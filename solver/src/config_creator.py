@@ -5,7 +5,7 @@ import json
 import os
 
 
-class Graphica3D:
+class Config_cretor:
     
     def __init__(self, data, output_path):
 
