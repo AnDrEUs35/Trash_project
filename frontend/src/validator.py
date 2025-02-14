@@ -48,7 +48,7 @@ class Validator:
                     print(f'Ошибка значения во времени отсчёта: "{start_time}"')
                     raise ValueError
         
-    def name_examination(self): # Это ненужный метод
+    def name_examination(self):
         name = self.data["graf_settings"]["FILE_NAME"]["value"]
         if name=='':
             print(f'Ошибка в значении имени файла: "{name}"')
