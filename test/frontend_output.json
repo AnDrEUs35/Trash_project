@@ -10,7 +10,7 @@
 			"value": 1
 		},
 		"DATE": {
-			"value": "26"
+			"value": "26.12.2026"
 		},
 		"START_TIME": {
 			"value": "00.00.00"
@@ -50,7 +50,24 @@
 	},
 	"user_satelites": {
 		"USER_SATELITE": {
-			"value": []
+			"value": [
+				{
+					"id": "URON3YJNFLHASMEYI83FQ56L8757RLY6",
+					"name": "Объект 1",
+					"user_satelite@@WIDTH_SAT": {
+						"value": 0
+					},
+					"user_satelite@@LONG_SAT": {
+						"value": 0
+					},
+					"user_satelite@@ABS_VELOCITY": {
+						"value": 11800
+					},
+					"user_satelite@@COLOR_SAT": {
+						"value": "red"
+					}
+				}
+			]
 		}
 	}
 }
