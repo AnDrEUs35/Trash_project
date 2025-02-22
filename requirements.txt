@@ -1,0 +1,11 @@
+datetime==5.5
+PyYAML==6.0.2
+jsons==1.6.3
+requests==2.32.3
+sgp4==2.23
+astropy==7.0.1
+matplotlib==3.10.0
+Cartopy==0.24.1
+geopy==2.4.1
+h5py==3.12.1
+numpy==2.2.2
