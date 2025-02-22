@@ -79,15 +79,15 @@ FIELDS:
             ru: Спутник
 
 
-    FILE_NAME:
+    GRAPHIC_NAME:
         type: string
         title:  
-            ru: Имя файла
+            ru: Название графика
         hint:
-            ru: Введите имя файла
+            ru: Введите подпись графика
         default: test
     
-    COLOR:
+    COLOR_SATELITE:
         type: string
         title:  
             ru: Цвет маркера
@@ -114,8 +114,34 @@ FIELDS:
             name:
               ru: Розовый  
 
+    COLOR_DEBRIS:
+        type: string
+        title:  
+            ru: Цвет маркера
+        hint:
+            ru: Выберите из выпадающего списка цвет для обозначения маркеров спутников и мусора
+        default: 'black'
+        enum:
+          - value: 'black'
+            name:
+              ru: Чёрный
+          - value: 'red'
+            name:
+              ru: Красный
+          - value: 'blue'
+            name:
+              ru: Синий
+          - value: 'green'
+            name:
+              ru: Зелёный
+          - value: 'yellow'
+            name:
+              ru: Жёлтый
+          - value: 'pink'
+            name:
+              ru: Розовый  
 
-    MARKER_FORM:
+    MARKER_FORM_SATELITE:
         type: string
         title:  
             ru: Форма маркера
@@ -139,7 +165,31 @@ FIELDS:
               name:
                   ru: X-образный
 
-    MARKER_SIZE:
+    MARKER_FORM_DEBRIS:
+        type: string
+        title:  
+            ru: Форма маркера
+        hint:
+            ru: Выберите форму маркера для обозначения на графике спутников и мусора
+        default: 'o'
+        enum:
+            - value: 'o'
+              name:
+                  ru: Круг
+            - value: 's'
+              name:
+                  ru: Квадрат
+            - value: '*'
+              name:
+                  ru: Звезда
+            - value: 'D'
+              name:
+                  ru: Ромб
+            - value: 'x'
+              name:
+                  ru: X-образный
+
+    MARKER_SIZE_SATELITE:
         type: integer
         title:  
             ru: Размер маркера
@@ -147,7 +197,36 @@ FIELDS:
             ru: Введите число для обозначения размера, int
         default: 5
 
-    LINE_STYLE:
+    MARKER_SIZE_DEBRIS:
+        type: integer
+        title:  
+            ru: Размер маркера
+        hint:
+            ru: Введите число для обозначения размера, int
+        default: 5
+
+    LINE_STYLE_SATELITE:
+        type: string
+        title:  
+            ru: Стиль линии
+        hint:
+            ru: Выберите стиль траекторий, которые будут рисоваться выбранными вами объектами моделирования
+        default: '-'
+        enum:
+            - value: '-'
+              name:
+                  ru: Сплошная линия
+            - value: '--'
+              name:
+                  ru: Штриховая линия
+            - value: '-.'
+              name:
+                  ru: Штрих-пунктирная линия
+            - value: ':'
+              name:
+                  ru: Пунктирная линия
+
+    LINE_STYLE_DEBRIS:
         type: string
         title:  
             ru: Стиль линии
@@ -291,15 +370,29 @@ STRUCTURE:
         title:  
             ru: Настройки графика
         fields:
-            - field: FILE_NAME
-            - field: COLOR
-              view: dropdown
-            - field: MARKER_FORM
-              view: dropdown
-            - field: MARKER_SIZE
-            - field: LINE_STYLE
-              view: dropdown
+            - field: GRAPHIC_NAME
             - field: TYPE_OF_FILE
+            - separator:
+                title:
+                  ru: Настроки отображения Мусора
+            - field: COLOR_DEBRIS
+              view: dropdown
+            - field: MARKER_FORM_DEBRIS
+              view: dropdown
+            - field: MARKER_SIZE_DEBRIS
+            - field: LINE_STYLE_DEBRIS
+              view: dropdown
+            - separator:
+                title:
+                  ru: Настроки отображения спутников
+            - field: COLOR_SATELITE
+              view: dropdown
+            - field: MARKER_FORM_SATELITE
+              view: dropdown
+            - field: MARKER_SIZE_SATELITE
+            - field: LINE_STYLE_SATELITE
+              view: dropdown
+
 
     - group:
         key: user_satelites
