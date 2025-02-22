@@ -14,15 +14,19 @@ class Satellite:
         self.coords = None
         self.velocity = None
 
-    def calculate_pos(self):
+    def calculate_pos(self, custom_time=None):
         satrec = Satrec.twoline2rv(self.line1, self.line2)
-        t = Time.now() 
+        if custom_time:
+            t = Time(custom_time)  # Используем пользовательское время
+        else:
+            t = Time.now()  # Используем текущее время, если custom_time не указано
         error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
         if error_code == 0:
             self.coords = list(teme_p)
             self.velocity = list(teme_v)
         else:
             print(f"Ошибка при вычислении {self.name}: код ошибки {error_code}")
+
 
 class TLEFetch:
     @staticmethod
@@ -40,10 +44,10 @@ class TLEFetch:
             for i in range(0, len(tle_data) - 2, 3):
                 if i + 2 < len(tle_data):
                     satellite = Satellite(
-                        name=tle_data[i].strip(),
-                        line1=tle_data[i + 1].strip(),
+                        name=tle_data[i].strip(), 
+                        line1=tle_data[i + 1].strip(), 
                         line2=tle_data[i + 2].strip()
-                    )
+                        )
                     satellites.append(satellite)
                 else:
                     print(f"Пропущена строка {i}, Причина: недостаток данных")
@@ -63,7 +67,7 @@ class SatelliteProcess:
             }
         }
 
-    def process_satellite(self, satellites):
+    def process_satellite(self, satellites, custom_time=None):
         for satellite in satellites:
             satellite.calculate_pos()
             self.data["satellites"].append({
@@ -72,7 +76,7 @@ class SatelliteProcess:
                 "velocity": satellite.velocity  
             })
 
-    def process_trash(self, trash):
+    def process_trash(self, trash, custom_time=None):
         for index, satellite in enumerate(trash, start=1):
             satellite.calculate_pos()
             self.data["trash"].append({
@@ -82,61 +86,70 @@ class SatelliteProcess:
             })
 
     def save(self, file_name='data.json'):
-        with open(file_name, 'w') as json_file:
+        output_path = './astro_data/data_output/' + file_name  # Указываем путь для сохранения
+        with open(output_path, 'w') as json_file:
             json.dump(self.data, json_file, indent=4)
-        print("Все данные успешно сохранены")
+        print(f"Все данные успешно сохранены в {output_path}")
+
 
 class Parser:
-    def __init__(self, data, output_path):
+    def __init__(self, data, output_path, config_path):
         self.data = data
         self.output_path = output_path
+        self.config_path = config_path
 
-    def filter_and_save_by_config(self, config):
+    def parse_frontend_output(self):
         try:
-            # Извлечение параметров из конфигурации
-            if 'main_settings' not in config:
-                raise KeyError("Отсутствует ключ 'main_settings' в конфигурации.")
-            
-            current_date_str = config['main_settings']['DATE']['value']  # Текущая дата
-            current_date = datetime.strptime(current_date_str, "%d.%m.%Y").date()
+            # Чтение данных из frontend_output.json
+            with open(self.config_path, 'r') as frontend_file:
+                frontend_data = json.load(frontend_file)
 
-            # Чтение данных из data.json
-            with open(self.data, 'r') as data_file:
-                data_content = json.load(data_file)
-
-            if not isinstance(data_content, dict):
-                raise ValueError("data.json должен содержать объект.")
-
-            # Определение типа объектов для фильтрации
-            filtered_objects = []
-            if config['main_settings']['SATELITE_TYPE']['value']:
-                objects_to_filter = data_content.get("satellites", [])
-            elif config['main_settings']['TRASH_TYPE']['value']:
-                objects_to_filter = data_content.get("trash", [])
+            # Чтение существующих данных из data.json (если файл существует)
+            if os.path.exists(self.data):
+                with open(self.data, 'r') as data_file:
+                    existing_data = json.load(data_file)
             else:
-                raise ValueError("Не указан тип объекта для фильтрации.")
+                existing_data = {
+                    "satellites": [],
+                    "trash": [],
+                    "user_properties": {
+                        "time": 20,
+                        "time_step": 4,
+                    }
+                }
 
-            # Фильтрация объектов по дате (если необходимо)
-            for item in objects_to_filter:
-                # Здесь можно добавить логику фильтрации по дате, если это требуется
-                filtered_objects.append(item)
+            # Добавление данных из frontend_output.json в существующие данные
+            if isinstance(frontend_data, dict) and isinstance(existing_data, dict):
+                if "objects" in frontend_data:
+                    for item in frontend_data["objects"]:
+                        if item.get("type") == "satellite":
+                            existing_data["satellites"].append({
+                                "name": item.get("name"),
+                                "coords": item.get("coordinates"),
+                                "velocity": item.get("velocity"),
+                            })
+                        elif item.get("type") == "trash":
+                            existing_data["trash"].append({
+                                "index": len(existing_data["trash"]) + 1,
+                                "coords": item.get("coordinates"),
+                                "velocity": item.get("velocity"),
+                            })
+                else:
+                    # Если frontend_data не содержит "objects", просто объединяем словари
+                    existing_data.update(frontend_data)
 
-            # Создание нового JSON с отфильтрованными объектами
-            result = {
-                "config": config,
-                "filtered_objects": filtered_objects
-            }
-
-            # Сохранение результатов в новый JSON-файл
-            os.makedirs(self.output_path, exist_ok=True)  # Создание директории, если её нет
-            output_file = f"{self.output_path}/data.json"
-            with open(output_file, 'w') as json_file:
-                json.dump(result, json_file, indent=4)
-            print(f"Отфильтрованные объекты успешно сохранены в {output_file}")
-
+            # Сохранение обновленных данных в data.json
+            with open(self.data, 'w') as data_file:
+                json.dump(existing_data, data_file, indent=4)
+            print(f"Данные из frontend_output.json успешно добавлены в {self.data}")
+        except FileNotFoundError:
+            print("Файл frontend_output.json не найден.")
+        except json.JSONDecodeError:
+            print("Ошибка при чтении JSON из frontend_output.json.")
         except Exception as e:
-            print(f"Ошибка при обработке данных: {e}")
-def run():
+            print(f"Произошла ошибка: {e}")
+
+def main():
     # Спутники
     active_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
     active_satellites = TLEFetch.get_tle_data(active_url)
@@ -145,12 +158,20 @@ def run():
     debris_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=fengyun-1c-debris&FORMAT=tle"
     debris_satellites = TLEFetch.get_tle_data(debris_url)
 
+    
+
+    # Получение времени из frontend_output.json
+    # Здесь вы можете добавить логику для получения времени, если это необходимо
+
+    # Обработка спутников и мусора с использованием пользовательского времени
     processor = SatelliteProcess()
     processor.process_satellite(active_satellites)
     processor.process_trash(debris_satellites)
     processor.save()
-
+    # Парсинг frontend_output.json
+    parser = Parser(data='./astro_data/data_output/data.json', output_path='output')
+    parser.parse_frontend_output()  # Убедитесь, что метод вызывается
     print("Все данные были успешно записаны")
 
 if __name__ == "__main__":
-    run()
+    main()

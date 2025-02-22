@@ -8,9 +8,27 @@ def run(config_path):
             config = json.load(file)
 
         output_path = './astro_data/data_output'  # Установите значение output_path здесь
-        pars = parser.Parser("./astro_data/data_output/data.json", output_path)
+        
+        active_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle"
+        active_satellites = parser.TLEFetch.get_tle_data(active_url)
 
-        pars.filter_and_save_by_config(config)  # Передаем конфигурацию в метод
+        # Мусор
+        debris_url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=fengyun-1c-debris&FORMAT=tle"
+        debris_satellites = parser.TLEFetch.get_tle_data(debris_url)
+
+
+
+        # Получение времени из frontend_output.json
+        # Здесь вы можете добавить логику для получения времени, если это необходимо
+
+        # Обработка спутников и мусора с использованием пользовательского времени
+        processor = parser.SatelliteProcess()
+        processor.process_satellite(active_satellites)
+        processor.process_trash(debris_satellites)
+        processor.save()
+        # Парсинг frontend_output.json
+        pars = parser.Parser("./astro_data/data_output/data.json", output_path, config_path)
+        pars.parse_frontend_output()  # Убедитесь, что метод вызывается
 
         return 'astro_data/data_output/data.json'
 
