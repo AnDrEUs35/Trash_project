@@ -1,4 +1,5 @@
 import json
+import datetime
 
 class Validator:
     def __init__(self, data):
@@ -17,7 +18,13 @@ class Validator:
                 raise ValueError
             else:
                 day, month, year = int(day), int(month), int(year)
+
+                date_now = str(datetime.datetime.now().date())
+                day_now, month_now, year_now = int(date_now.split('-')[2]), int(date_now.split('-')[1]), int(date_now.split('-')[0])
                 
+                self.date_now_for_time = str(day_now) + '.' + str(month_now) + '.' + str(year_now)
+                self.date_for_time = str(day) + '.' + str(month) + '.' + str(year)
+
                 if day > 31 and (month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12):
                     print(f'Ошибка значения в дате: "{date}"')
                     raise ValueError
@@ -30,7 +37,9 @@ class Validator:
                 elif month < 1 or month > 12 or day < 1:
                     print(f'Ошибка значения в дате: "{date}"')
                     raise ValueError
-
+                elif day < day_now and month <= month_now and year <= year_now:
+                    print(f'Ошибка значения в дате: "{date}". Мы не можем моделировать прошлое.')
+                    raise ValueError
 
     def start_time_examination(self):
         start_time = self.data["main_settings"]["START_TIME"]["value"]
@@ -44,8 +53,15 @@ class Validator:
                 raise ValueError
             else:
                 hour, minute, second = int(hour), int(minute), int(second)
+
+                time_now = str(datetime.datetime.now().time())
+                hour_now, minute_now, second_now = int(time_now.split(':')[0]), int(time_now.split(':')[1]), int((time_now.split(':')[2].split('.')[0]))
+
                 if (hour > 23 or hour < 0) or (minute > 59 or minute < 0) or (second > 59 or second < 0):
                     print(f'Ошибка значения во времени отсчёта: "{start_time}"')
+                    raise ValueError
+                elif ((hour < hour_now) or (hour == hour_now and minute < minute_now) or (hour == hour_now and minute == minute_now and second < second_now)) and self.date_for_time == self.date_now_for_time:
+                    print(f'Ошибка значения во времени отсчёта: "{start_time}". Мы не моделируем прошлое.')
                     raise ValueError
         
     def name_examination(self):

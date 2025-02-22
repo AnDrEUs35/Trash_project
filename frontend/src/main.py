@@ -1,6 +1,6 @@
 from . import validator
 import yaml
-import datetime
+# import datetime
 
 def run_validator(data_path):
     valid = validator.Validator(data_path)
