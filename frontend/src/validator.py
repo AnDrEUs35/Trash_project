@@ -54,13 +54,13 @@ class Validator:
             else:
                 hour, minute, second = int(hour), int(minute), int(second)
 
-                time_now = str(datetime.datetime.now().time())
-                hour_now, minute_now, second_now = int(time_now.split(':')[0]), int(time_now.split(':')[1]), int((time_now.split(':')[2].split('.')[0]))
+                time_now = datetime.datetime.now().time()
+                hour_now, minute_now, second_now = time_now.hour, time_now.minute, time_now.second
 
                 if (hour > 23 or hour < 0) or (minute > 59 or minute < 0) or (second > 59 or second < 0):
                     print(f'Ошибка значения во времени отсчёта: "{start_time}"')
                     raise ValueError
-                elif ((hour < hour_now) or (hour == hour_now and minute < minute_now) or (hour == hour_now and minute == minute_now and second < second_now)) and self.date_for_time == self.date_now_for_time:
+                elif (hour, minute, second) < (hour_now, minute_now, second_now) and self.date_for_time == self.date_now_for_time:
                     print(f'Ошибка значения во времени отсчёта: "{start_time}". Мы не моделируем прошлое.')
                     raise ValueError
         
