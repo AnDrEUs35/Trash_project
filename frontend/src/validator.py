@@ -65,7 +65,7 @@ class Validator:
                     raise ValueError
         
     def name_examination(self):
-        name = self.data["graf_settings"]["FILE_NAME"]["value"]
+        name = self.data["graf_settings"]["GRAPHIC_NAME"]["value"]
         if name=='':
             print(f'Ошибка в значении имени файла: "{name}"')
             raise ValueError
