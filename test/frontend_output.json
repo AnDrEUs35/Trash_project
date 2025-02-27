@@ -10,10 +10,10 @@
 			"value": 1
 		},
 		"DATE": {
-			"value": "26.02.2026"
+			"value": "01.01.2026"
 		},
 		"START_TIME": {
-			"value": "15.40.00"
+			"value": "00.00.00"
 		},
 		"DURATION": {
 			"value": 100
@@ -29,23 +29,35 @@
 		}
 	},
 	"graf_settings": {
-		"FILE_NAME": {
+		"GRAPHIC_NAME": {
 			"value": "test"
-		},
-		"COLOR": {
-			"value": "black"
-		},
-		"MARKER_FORM": {
-			"value": "o"
-		},
-		"MARKER_SIZE": {
-			"value": 5
-		},
-		"LINE_STYLE": {
-			"value": "-"
 		},
 		"TYPE_OF_FILE": {
 			"value": ".png"
+		},
+		"COLOR_DEBRIS": {
+			"value": "black"
+		},
+		"MARKER_FORM_DEBRIS": {
+			"value": "o"
+		},
+		"MARKER_SIZE_DEBRIS": {
+			"value": 5
+		},
+		"LINE_STYLE_DEBRIS": {
+			"value": "-"
+		},
+		"COLOR_SATELITE": {
+			"value": "black"
+		},
+		"MARKER_FORM_SATELITE": {
+			"value": "o"
+		},
+		"MARKER_SIZE_SATELITE": {
+			"value": 5
+		},
+		"LINE_STYLE_SATELITE": {
+			"value": "-"
 		}
 	},
 	"user_satelites": {

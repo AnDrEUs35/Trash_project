@@ -9,8 +9,8 @@ def main(config_path, output_path):
     debris_data_path = debris_data.run(config_path)
     solver.run(debris_data_path, output_path)
 
-    # arepo_output_path = './test'
-    # graph_handler.run(arepo_output_path, output_path)
+    #arepo_output_path = './test'
+    #graph_handler.run(arepo_output_path, output_path)
 
 
 if __name__ == "__main__":
