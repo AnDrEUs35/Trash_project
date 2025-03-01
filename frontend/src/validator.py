@@ -5,7 +5,8 @@ class Validator:
     def __init__(self, data):
         with open(data) as data_file:
             self.data = json.load(data_file) # Чтение данных из файла при создании объекта класса 
-    
+            print("Данные успешно прочитаны валидатором. Начинаем проверку")
+
     def date_examination(self):
         date = self.data["main_settings"]["DATE"]["value"]
         if date == "" or len(date.split('.')) != 3:
@@ -21,7 +22,7 @@ class Validator:
 
                 date_now = str(datetime.datetime.now().date())
                 day_now, month_now, year_now = int(date_now.split('-')[2]), int(date_now.split('-')[1]), int(date_now.split('-')[0])
-                
+
                 self.date_now_for_time = str(day_now) + '.' + str(month_now) + '.' + str(year_now)
                 self.date_for_time = str(day) + '.' + str(month) + '.' + str(year)
 
@@ -37,9 +38,11 @@ class Validator:
                 elif month < 1 or month > 12 or day < 1:
                     print(f'Ошибка значения в дате: "{date}"')
                     raise ValueError
-                elif day < day_now and month <= month_now and year <= year_now:
+                elif (day < day_now and month == month_now and year == year_now) or (month < month_now and year == year_now) or year < year_now:
                     print(f'Ошибка значения в дате: "{date}". Мы не можем моделировать прошлое.')
                     raise ValueError
+                else:
+                    print('Проверка корректности даты прошла успешно.')
 
     def start_time_examination(self):
         start_time = self.data["main_settings"]["START_TIME"]["value"]
@@ -63,12 +66,16 @@ class Validator:
                 elif (hour, minute, second) < (hour_now, minute_now, second_now) and self.date_for_time == self.date_now_for_time:
                     print(f'Ошибка значения во времени отсчёта: "{start_time}". Мы не моделируем прошлое.')
                     raise ValueError
+                else:
+                    print("Проверка времени отсчёта прошла успешно.")
         
     def name_examination(self):
         name = self.data["graf_settings"]["GRAPHIC_NAME"]["value"]
         if name=='':
             print(f'Ошибка в значении имени файла: "{name}"')
             raise ValueError
+        else:
+            print("Проверка подписи графика пройдена")
 
     def __is_number(self, a):
         try:
