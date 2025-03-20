@@ -3,7 +3,7 @@ import numpy as np
 import h5py
 import json
 import os
-
+import sys
 
 class Graphica3D:
     
@@ -22,8 +22,8 @@ class Graphica3D:
         # библиотеке AREPO code. Вся информация в этих файлах статична,
         # поскольку моделирование зависит только от расположения 
         # частиц (спуников, мусора и т.п.)
-        os.system(f'cp ./param.txt {self.output_path}/param.txt')
-        os.system(f'cp ./Config.sh {self.output_path}/Config.sh')
+        os.system(f'cp {sys.path[0]}/param.txt {self.output_path}/param.txt')
+        os.system(f'cp {sys.path[0]}/Config.sh {self.output_path}/Config.sh')
     
     def get_hdf5(self):
         # return './../test/IC.hdf5'

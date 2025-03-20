@@ -6,6 +6,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from geopy.distance import geodesic
 import h5py
+import json
 
 def project_orbit_to_earth(x, y, z, R=6371):
     """

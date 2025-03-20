@@ -143,12 +143,12 @@ FIELDS:
             name:
               ru: Розовый  
 
-    MARKER_FORM_SATELITE:
+    MARKER_FORM_START:
         type: string
         title:  
-            ru: Форма маркера
+            ru: Форма маркера начала проекции
         hint:
-            ru: Выберите форму маркера для обозначения на графике спутников и мусора
+            ru: Выберите форму маркера для обозначения на графике точки, откуда начинается расчёт траектории тела
         default: 'o'
         enum:
             - value: 'o'
@@ -167,12 +167,12 @@ FIELDS:
               name:
                   ru: X-образный
 
-    MARKER_FORM_DEBRIS:
+    MARKER_FORM_END:
         type: string
         title:  
-            ru: Форма маркера
+            ru: Форма маркера конца проекции
         hint:
-            ru: Выберите форму маркера для обозначения на графике спутников и мусора
+            ru: Выберите форму маркера для обозначения на графике точки, где заканчивается расчёт траектории тела
         default: 'o'
         enum:
             - value: 'o'
@@ -379,8 +379,6 @@ STRUCTURE:
                   ru: Настроки отображения Мусора
             - field: COLOR_DEBRIS
               view: dropdown
-            - field: MARKER_FORM_DEBRIS
-              view: dropdown
             - field: MARKER_SIZE_DEBRIS
             - field: LINE_STYLE_DEBRIS
               view: dropdown
@@ -389,10 +387,15 @@ STRUCTURE:
                   ru: Настроки отображения спутников
             - field: COLOR_SATELITE
               view: dropdown
-            - field: MARKER_FORM_SATELITE
-              view: dropdown
             - field: MARKER_SIZE_SATELITE
             - field: LINE_STYLE_SATELITE
+              view: dropdown
+            - separator:
+                title:
+                  ru: Настройка формы маркера
+            - field: MARKER_FORM_START
+              view: dropdown
+            - field: MARKER_FORM_END
               view: dropdown
 
 
