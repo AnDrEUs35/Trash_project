@@ -18,13 +18,10 @@ def main(input_path, output_path, state):
         print('arepo output path: ', arepo_output_path)
         # for i in range(10):
         #     os.system(f'cp {arepo_output_path}/snap_00{i}.hdf5 {output_path}/snap_00{i}.hdf5')
-        #     if i == range(10)[-1]:
-        #         end_file = f'/snap_00{i}.hdf5'
-        end_file = '/snap_040.hdf5'
-        graph_handler.run(arepo_output_path, output_path, data, end_file)
+        graph_handler.run(arepo_output_path, output_path, data)
 
 
 if __name__ == "__main__":
     main('./test/frontend_output.json', './test', 'config')
-    main('./test', './test', 'handler')
+    main('./test/snaps', './test', 'handler')
     # main(sys.argv[1], sys.argv[2], sys.argv[3])

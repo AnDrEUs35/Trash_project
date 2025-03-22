@@ -50,8 +50,11 @@ class Graphica3D:
             # filling pos and vel of filtered_objects and trash
             for i in range(n_sat):
                 for j in range(3):
-                    pos_sattelite[i][j] += self.FloatType(self.data['satellites'][i]['coords'][j])
-                    vel_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['velocity'][j])
+                    try:
+                        pos_sattelite[i][j] += self.FloatType(self.data['satellites'][i]['coords'][j])
+                        vel_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['velocity'][j])
+                    except TypeError:
+                        continue
         else:
             n_sat = 0
 

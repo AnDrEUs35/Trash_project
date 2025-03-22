@@ -4,10 +4,10 @@
 			"value": 57
 		},
 		"LONG": {
-			"value": 86
+			"value": 70
 		},
 		"RADIUS": {
-			"value": 3000
+			"value": 1000
 		},
 		"DATE": {
 			"value": "01.01.2026"
@@ -36,28 +36,28 @@
 			"value": ".png"
 		},
 		"COLOR_DEBRIS": {
-			"value": "black"
-		},
-		"MARKER_FORM_DEBRIS": {
-			"value": "o"
+			"value": "green"
 		},
 		"MARKER_SIZE_DEBRIS": {
 			"value": 5
 		},
 		"LINE_STYLE_DEBRIS": {
-			"value": "-"
+			"value": "--"
 		},
 		"COLOR_SATELITE": {
-			"value": "black"
-		},
-		"MARKER_FORM_SATELITE": {
-			"value": "o"
+			"value": "red"
 		},
 		"MARKER_SIZE_SATELITE": {
 			"value": 5
 		},
 		"LINE_STYLE_SATELITE": {
-			"value": "-"
+			"value": ":"
+		},
+		"MARKER_FORM_START": {
+			"value": "s"
+		},
+		"MARKER_FORM_END": {
+			"value": "o"
 		}
 	},
 	"user_satelites": {

@@ -129,7 +129,7 @@ class Map:
         if radius_km < 1:
             radius_km = 1 # Защита от бед
         # Списки спутников и мусора (начала и конца)
-        #points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite] 
+        #points = [project_orbit_to_earth(x, y, z,) for x, y, z in pos_sattelite]
         satellites_start = [project_orbit_to_earth(x, y, z,) for x, y, z in self.satellites_start] # Начальные координаты спутников
         satellites_end = [project_orbit_to_earth(x, y, z,) for x, y, z in self.satellites_end]     # Конечные координаты спутников
         debris_start = [project_orbit_to_earth(x, y, z,) for x, y, z in self.debris_start]         # Начальные координаты мусора
@@ -168,25 +168,34 @@ class Map:
         ax.add_feature(cfeature.LAKES, edgecolor='black')
         ax.add_feature(cfeature.RIVERS)
 
+        def read_front():
+            with open('./test/frontend_output.json') as f:
+                data = json.load(f)['graf_settings']
+                a = ["COLOR_DEBRIS", "COLOR_SATELITE", "MARKER_FORM_START", "MARKER_FORM_END", "MARKER_SIZE_DEBRIS", "MARKER_SIZE_SATELITE", "LINE_STYLE_SATELITE", "LINE_STYLE_DEBRIS", "GRAPHIC_NAME"]
+                data = [data[i]['value'] for i in a]
+                return data
+
+        data = read_front()
+
        # Функция для отрисовки линий
-        def plot_lines(start_coords, end_coords, color, label):
+        def plot_lines(start_coords, end_coords, color, line_style, marker, label):
             for start, end in zip(start_coords, end_coords):
                 start_lat, start_lon = start
                 end_lat, end_lon = end
                 # Рисуем линии между начальными и конечными координатами
-                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=2, label=label)
+                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=2, linestyle=line_style, label=label)
                 # Отображаем начальную и конечную точки
-                ax.scatter(start_lon, start_lat, color=color, marker='o', s=100, transform=ccrs.PlateCarree(), label=None)
-                ax.scatter(end_lon, end_lat, color=color, marker='s', s=100, transform=ccrs.PlateCarree(), label=None)
+                ax.scatter(start_lon, start_lat, color=color, marker=data[2], s=marker, transform=ccrs.PlateCarree(), label=None)
+                ax.scatter(end_lon, end_lat, color=color, marker=data[3], s=marker, transform=ccrs.PlateCarree(), label=None)
 
          # Отображаем местоположение человека
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
 
         # Отображаем линии для спутников
-        plot_lines(satellites_start, satellites_end, 'blue', 'Спутники')
+        plot_lines(satellites_start, satellites_end, color=data[1], line_style=data[6], label='Спутники', marker=data[5])
 
         # Отображаем линии для мусора
-        plot_lines(debris_start, debris_end, 'red', 'Мусор')
+        plot_lines(debris_start, debris_end, color=data[0], line_style=data[7], label='Мусор', marker=data[4])
 
         # Добавляем сетку (широта и долгота)
         gridlines = ax.gridlines(draw_labels=True, linestyle='--', color='gray', alpha=0.5)
@@ -199,9 +208,10 @@ class Map:
         # Добавляем легенду
         handles, labels = ax.get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
-        ax.legend(by_label.values(), by_label.keys())
+        ax.legend(by_label.values(), by_label.keys(), loc='best')
         # Устанавливаем аспект (чтобы карта была квадратной)
         ax.set_aspect('equal', adjustable='datalim')
 
         # Показать карту
-        plt.savefig(f'{self.output_path}/more_lists')
+        plt.savefig(f'{self.output_path}/{data[8]}')
+
