@@ -28,14 +28,15 @@
    ```bash
    git clone https://github.com/ваш_репозиторий.git
    cd ваш_репозиторий
-
+    ```
 2. Установите зависимости:
     ```bash
     pip install -r requirements.txt
+    ```
 3. Создайте папку для выходных данных:
     ```bash
     mkdir -p astro_data/data_output
-```
+    ```
 ## Использование
 
 Запустите основной скрипт main.py, указав путь к конфигурационному файлу frontend_output.json:
