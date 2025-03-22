@@ -43,7 +43,7 @@ class TLEFetch:
 
             for i in range(0, len(tle_data) - 2, 3):
                 if i + 2 < len(tle_data):
-                    satellite = Satellite(
+                    satellite = Satellite (
                         name=tle_data[i].strip(), 
                         line1=tle_data[i + 1].strip(), 
                         line2=tle_data[i + 2].strip()
