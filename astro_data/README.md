@@ -42,8 +42,9 @@
 
 ```bash
 python main.py
+```
 
-## Структура проекта:
+## Структура проекта
 ```bash
 .
 ├── main.py
@@ -52,9 +53,8 @@ python main.py
 │   └── data_output
 │       └── data.json
 └── frontend_output.json
-
-###
-Классы и методы
+```
+### Классы и методы
 
 main.py
     Функция run(config_path):
