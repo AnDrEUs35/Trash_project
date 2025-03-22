@@ -5,7 +5,7 @@ import yaml
 def run_validator(data_path):
     valid = validator.Validator(data_path)
     valid.date_examination()
-    valid.start_time_examination()
+    valid.model_time_examination()
     valid.name_examination()
 
 # def change_time(path):

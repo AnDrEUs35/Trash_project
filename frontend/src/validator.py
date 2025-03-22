@@ -44,27 +44,32 @@ class Validator:
                 else:
                     print('Проверка корректности даты прошла успешно.')
 
-    def start_time_examination(self):
-        start_time = self.data["main_settings"]["START_TIME"]["value"]
-        if start_time == "" or len(start_time.split('.')) != 3:
-            print(f'Ошибка значения во времени отсчёта: "{start_time}"')
+    def model_time_examination(self):
+        model_time = self.data["main_settings"]["MODEL_TIME"]["value"]
+        if model_time == "" or len(model_time) != 5:
+            print(f'Ошибка значения во временном промежутке: "{model_time}".')
             raise ValueError
         else:
-            hour, minute, second = start_time.split('.')[0], start_time.split('.')[1], start_time.split('.')[2]
-            if self.__is_number(hour) == False or self.__is_number(minute) == False or self.__is_number(second) == False:
-                print(f'Ошибка значения во времени отсчёта: "{start_time}"')
+            hour1, hour2 = model_time.split('-')[0], model_time.split('-')[1]
+            if self.__is_number(hour1) == False or self.__is_number(hour2) == False:
+                print(f'Ошибка значения во временном промежутке: "{model_time}". Значения не являются числами')
                 raise ValueError
             else:
-                hour, minute, second = int(hour), int(minute), int(second)
+                hour1, hour2 = int(hour1), int(hour2)
 
-                time_now = datetime.datetime.now().time()
-                hour_now, minute_now, second_now = time_now.hour, time_now.minute, time_now.second
+                hour_now = datetime.datetime.now().time().hour
 
-                if (hour > 23 or hour < 0) or (minute > 59 or minute < 0) or (second > 59 or second < 0):
-                    print(f'Ошибка значения во времени отсчёта: "{start_time}"')
+                if (hour1 > 23 or hour1 < 0) or (hour2 > 23 or hour2 < 0):
+                    print(f'Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
                     raise ValueError
-                elif (hour, minute, second) < (hour_now, minute_now, second_now) and self.date_for_time == self.date_now_for_time:
-                    print(f'Ошибка значения во времени отсчёта: "{start_time}". Мы не моделируем прошлое.')
+                elif hour2 - hour1 > 5 or -19 < hour2 - hour1 < 0 :
+                    print(f'Ошибка значения во временном промежутке: "{model_time}". Промежуток не более 5 часов')
+                    raise ValueError
+                elif hour2 == hour1:
+                    print(f'Ошибка значения во временном промежутке: "{model_time}".')
+                    raise ValueError
+                elif hour1 < hour_now and self.date_for_time == self.date_now_for_time:
+                    print(f'Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое.')
                     raise ValueError
                 else:
                     print("Проверка времени отсчёта прошла успешно.")

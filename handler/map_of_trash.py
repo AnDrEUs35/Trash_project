@@ -183,7 +183,7 @@ class Map:
                 start_lat, start_lon = start
                 end_lat, end_lon = end
                 # Рисуем линии между начальными и конечными координатами
-                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=2, linestyle=line_style, label=label)
+                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=1, linestyle=line_style, label=label)
                 # Отображаем начальную и конечную точки
                 ax.scatter(start_lon, start_lat, color=color, marker=data[2], s=marker, transform=ccrs.PlateCarree(), label=None)
                 ax.scatter(end_lon, end_lat, color=color, marker=data[3], s=marker, transform=ccrs.PlateCarree(), label=None)

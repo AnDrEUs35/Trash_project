@@ -12,14 +12,8 @@
 		"DATE": {
 			"value": "01.01.2026"
 		},
-		"START_TIME": {
-			"value": "00.00.00"
-		},
-		"DURATION": {
-			"value": 100
-		},
-		"STEP": {
-			"value": 1
+		"MODEL_TIME": {
+			"value": "00-02"
 		},
 		"TRASH_TYPE": {
 			"value": true
@@ -36,7 +30,7 @@
 			"value": ".png"
 		},
 		"COLOR_DEBRIS": {
-			"value": "green"
+			"value": "red"
 		},
 		"MARKER_SIZE_DEBRIS": {
 			"value": 5
@@ -45,19 +39,19 @@
 			"value": "--"
 		},
 		"COLOR_SATELITE": {
-			"value": "red"
+			"value": "green"
 		},
 		"MARKER_SIZE_SATELITE": {
 			"value": 5
 		},
 		"LINE_STYLE_SATELITE": {
-			"value": ":"
+			"value": "-."
 		},
 		"MARKER_FORM_START": {
-			"value": "s"
+			"value": "o"
 		},
 		"MARKER_FORM_END": {
-			"value": "o"
+			"value": "*"
 		}
 	},
 	"user_satelites": {
