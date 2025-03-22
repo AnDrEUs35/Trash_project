@@ -23,5 +23,5 @@ def main(input_path, output_path, state):
 
 if __name__ == "__main__":
     main('./test/frontend_output.json', './test', 'config')
-    main('./test/snaps', './test', 'handler')
+    main('./test/output', './test', 'handler')
     # main(sys.argv[1], sys.argv[2], sys.argv[3])

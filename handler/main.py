@@ -3,7 +3,8 @@ import json
 import os
 
 def run(arepo, output_path, data):
-    end_file = sorted(os.listdir(arepo))[-1]
+    end_file = sorted([x for x in os.listdir(arepo) if x[:4] == 'snap' and x[-4:] == 'hdf5'])[-1]
+    print(end_file)
     map_creating = map_of_trash.Map(output_path)
     map_creating.get_info_start(arepo + '/snap_000.hdf5')
     map_creating.get_info_end(arepo + f"/{end_file}")
