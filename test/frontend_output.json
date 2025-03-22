@@ -1,62 +1,70 @@
 {
-	"main_settings": {
-		"WIDTH": {
-			"value": 57
-		},
-		"LONG": {
-			"value": 70
-		},
-		"RADIUS": {
-			"value": 1000
-		},
-		"DATE": {
-			"value": "01.01.2026"
-		},
-		"MODEL_TIME": {
-			"value": "00-02"
-		},
-		"TRASH_TYPE": {
-			"value": true
-		},
-		"SATELITE_TYPE": {
-			"value": true
-		}
-	},
-	"graf_settings": {
-		"GRAPHIC_NAME": {
-			"value": "test"
-		},
-		"TYPE_OF_FILE": {
-			"value": ".png"
-		},
-		"COLOR_DEBRIS": {
-			"value": "red"
-		},
-		"MARKER_SIZE_DEBRIS": {
-			"value": 5
-		},
-		"LINE_STYLE_DEBRIS": {
-			"value": "--"
-		},
-		"COLOR_SATELITE": {
-			"value": "green"
-		},
-		"MARKER_SIZE_SATELITE": {
-			"value": 5
-		},
-		"LINE_STYLE_SATELITE": {
-			"value": "-."
-		},
-		"MARKER_FORM_START": {
-			"value": "o"
-		},
-		"MARKER_FORM_END": {
-			"value": "*"
-		}
-	},
-	"user_satelites": {
-		"USER_SATELITE": {
-			"value": []
-		}
-	}
+    "main_settings": {
+        "WIDTH": {
+            "value": 50
+        },
+        "LONG": {
+            "value": 60
+        },
+        "RADIUS": {
+            "value": 1000
+        },
+        "DATE": {
+            "value": "01.01.2026"
+        },
+        "MODEL_TIME": {
+            "value": "00-02"
+        },
+        "TRASH_TYPE": {
+            "value": true
+        },
+        "SATELITE_TYPE": {
+            "value": true
+        }
+    },
+    "graf_settings": {
+        "GRAPHIC_NAME": {
+            "value": "test"
+        },
+        "TYPE_OF_FILE": {
+            "value": ".png"
+        },
+        "COLOR_DEBRIS": {
+            "value": "red"
+        },
+        "MARKER_SIZE_DEBRIS": {
+            "value": 5
+        },
+        "LINE_STYLE_DEBRIS": {
+            "value": "--"
+        },
+        "COLOR_SATELITE": {
+            "value": "green"
+        },
+        "MARKER_SIZE_SATELITE": {
+            "value": 10
+        },
+        "LINE_STYLE_SATELITE": {
+            "value": "-."
+        },
+        "MARKER_FORM_START": {
+            "value": "o"
+        },
+        "MARKER_FORM_END": {
+            "value": "*"
+        }
+    },
+    "user_satelites": {
+        "USER_SATELITE": {
+            "value": []
+        }
+    },
+    "time_for_count": {
+        "max_time": {
+            "value": 6842
+        },
+        "snap_start": {
+            "value": 6840
+        }
+    }
 }

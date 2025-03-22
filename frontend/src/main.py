@@ -7,6 +7,7 @@ def run_validator(data_path):
     valid.date_examination()
     valid.model_time_examination()
     valid.name_examination()
+    valid.counting_time()
 
 # def change_time(path):
 #     with open(path, encoding="UTF-8") as f:
