@@ -89,7 +89,9 @@ class Validator:
         
     def counting_time(self):
         # parse преобразует строковое значение даты в объекты datetime
-        duration = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[1]) - int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[0])
+        time1 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[0])
+        time2 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[1])
+        duration = time2 - time1
         count_hours = (parse(self.date) - parse(self.date_now_for_time)).days * 24
         adding = {
                 "max_time": {
@@ -102,6 +104,8 @@ class Validator:
         self.data['time_for_count'] = adding
         with open(self.data_path, 'w') as data_file:
             json.dump(self.data, data_file, indent=4)  # indent задаёт отсутпы для читабельности
+
+
 if __name__ == '__main__':
     validator = Validator(data='test/frontend_output_bug.json')
     validator.start_time_examination()
