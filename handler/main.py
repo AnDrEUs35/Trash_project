@@ -11,7 +11,7 @@ def run(arepo, output_path, data):
         data = json.load(data_file)
         width, long, radius = data['main_settings']['WIDTH']['value'], data['main_settings']['LONG']['value'], data['main_settings']['RADIUS']['value']
     map_creating.get_tracer((width, long), radius)
-    # map_creating.get_map((54.741906, -90.492995), 1000)
+    # map_creating.get_map((width, long), radius)
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@
             "value": "00-02"
         },
         "TRASH_TYPE": {
-            "value": true
+            "value": false
         },
         "SATELITE_TYPE": {
             "value": true
@@ -61,10 +61,10 @@
     },
     "time_for_count": {
         "max_time": {
-            "value": 6842
+            "value": 6794
         },
         "snap_start": {
-            "value": 6840
+            "value": 6792
         }
     }
 }

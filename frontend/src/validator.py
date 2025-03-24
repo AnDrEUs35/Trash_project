@@ -26,9 +26,6 @@ class Validator:
                 day_now, month_now, year_now = int(date_now.split('-')[2]), int(date_now.split('-')[1]), int(date_now.split('-')[0])
 
                 self.date_now_for_time = str(day_now) + '.' + str(month_now) + '.' + str(year_now)
-                # self.date_for_time = str(day) + '.' + str(month) + '.' + str(year)
-                
-
 
                 if day > 31 and (month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12):
                     print(f'Ошибка значения в дате: "{self.date}"')
@@ -66,11 +63,8 @@ class Validator:
                 if (hour1 > 23 or hour1 < 0) or (hour2 > 23 or hour2 < 0):
                     print(f'Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
                     raise ValueError
-                elif hour2 - hour1 > 5 or -19 < hour2 - hour1 < 0 :
-                    print(f'Ошибка значения во временном промежутке: "{model_time}". Промежуток не более 5 часов')
-                    raise ValueError
-                elif hour2 == hour1:
-                    print(f'Ошибка значения во временном промежутке: "{model_time}".')
+                elif not 1 <= (hour2 - hour1) % 24 <= 5: 
+                    print(f'Ошибка значения во временном промежутке: "{model_time}". Промежуток не менее 1 часа, но и не более 5 часов.')
                     raise ValueError
                 elif hour1 < hour_now and self.date == self.date_now_for_time:
                     print(f'Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое.')

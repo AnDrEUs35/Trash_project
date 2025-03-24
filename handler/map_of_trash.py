@@ -169,13 +169,17 @@ class Map:
         ax.add_feature(cfeature.RIVERS)
 
         def read_front():
-            with open('./test/frontend_output.json') as f:
-                data = json.load(f)['graf_settings']
-                a = ["COLOR_DEBRIS", "COLOR_SATELITE", "MARKER_FORM_START", "MARKER_FORM_END", "MARKER_SIZE_DEBRIS", "MARKER_SIZE_SATELITE", "LINE_STYLE_SATELITE", "LINE_STYLE_DEBRIS", "GRAPHIC_NAME"]
-                data = [data[i]['value'] for i in a]
-                return data
+            with open('./test/frontend_output.json') as file:
+                data = json.load(file)
+                graph_data, main_data = data['graf_settings'], data['main_settings']
+                a = ["COLOR_DEBRIS", "COLOR_SATELITE", "MARKER_FORM_START", "MARKER_FORM_END", "MARKER_SIZE_DEBRIS",
+                    "MARKER_SIZE_SATELITE", "LINE_STYLE_SATELITE", "LINE_STYLE_DEBRIS", "GRAPHIC_NAME"]
+                sat_or_deb = ["TRASH_TYPE", "SATELITE_TYPE"]
+                graph_data = [graph_data[i]['value'] for i in a]
+                main_data = [main_data[i]['value'] for i in sat_or_deb]
+                return graph_data, main_data
 
-        data = read_front()
+        graph_data, main_data = read_front()
 
        # Функция для отрисовки линий
         def plot_lines(start_coords, end_coords, color, line_style, marker, label):
@@ -185,17 +189,20 @@ class Map:
                 # Рисуем линии между начальными и конечными координатами
                 ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=1, linestyle=line_style, label=label)
                 # Отображаем начальную и конечную точки
-                ax.scatter(start_lon, start_lat, color=color, marker=data[2], s=marker, transform=ccrs.PlateCarree(), label=None)
-                ax.scatter(end_lon, end_lat, color=color, marker=data[3], s=marker, transform=ccrs.PlateCarree(), label=None)
+                ax.scatter(start_lon, start_lat, color=color, marker=graph_data[2], s=marker, transform=ccrs.PlateCarree(), label=None)
+                ax.scatter(end_lon, end_lat, color=color, marker=graph_data[3], s=marker, transform=ccrs.PlateCarree(), label=None)
 
          # Отображаем местоположение человека
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
 
         # Отображаем линии для спутников
-        plot_lines(satellites_start, satellites_end, color=data[1], line_style=data[6], label='Спутники', marker=data[5])
+        print(main_data)
+        if main_data[1] == True:
+            plot_lines(satellites_start, satellites_end, color=graph_data[1], line_style=graph_data[6], label='Спутники', marker=graph_data[5])
 
         # Отображаем линии для мусора
-        plot_lines(debris_start, debris_end, color=data[0], line_style=data[7], label='Мусор', marker=data[4])
+        if main_data[0] == True:
+            plot_lines(debris_start, debris_end, color=graph_data[0], line_style=graph_data[7], label='Мусор', marker=graph_data[4])
 
         # Добавляем сетку (широта и долгота)
         gridlines = ax.gridlines(draw_labels=True, linestyle='--', color='gray', alpha=0.5)
@@ -213,5 +220,5 @@ class Map:
         ax.set_aspect('equal', adjustable='datalim')
 
         # Показать карту
-        plt.savefig(f'{self.output_path}/{data[8]}')
+        plt.savefig(f'{self.output_path}/{graph_data[8]}')
 
