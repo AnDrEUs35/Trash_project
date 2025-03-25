@@ -1,6 +1,9 @@
 import json
 import datetime
 from dateutil.parser import parse
+import requests
+from bs4 import BeautifulSoup
+
 
 class Validator:
     def __init__(self, data):
@@ -22,8 +25,8 @@ class Validator:
             else:
                 day, month, year = int(day), int(month), int(year)
 
-                date_now = str(datetime.datetime.now().date())
-                day_now, month_now, year_now = int(date_now.split('-')[2]), int(date_now.split('-')[1]), int(date_now.split('-')[0])
+                date_now = str(datetime.datetime.now().date()).split('-')
+                day_now, month_now, year_now = int(date_now[2]), int(date_now[1]), int(date_now[0])
 
                 self.date_now_for_time = str(day_now) + '.' + str(month_now) + '.' + str(year_now)
 
@@ -59,6 +62,7 @@ class Validator:
                 hour1, hour2 = int(hour1), int(hour2)
 
                 hour_now = datetime.datetime.now().time().hour
+                print(hour_now)
 
                 if (hour1 > 23 or hour1 < 0) or (hour2 > 23 or hour2 < 0):
                     print(f'Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
@@ -92,7 +96,7 @@ class Validator:
         time1 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[0])
         time2 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[1])
         duration = time2 - time1
-        count_hours = (parse(self.date) - parse(self.date_now_for_time)).days * 24
+        count_hours = (parse(self.date) - parse(self.date_now_for_time)).days * 24 + (24 - self.time_from_celestrak) + time1
         adding = {
                 "max_time": {
                     "value": count_hours + duration
@@ -105,8 +109,20 @@ class Validator:
         with open(self.data_path, 'w') as data_file:
             json.dump(self.data, data_file, indent=4)  # indent задаёт отсутпы для читабельности
 
+    @property
+    def time_from_celestrak(self):
+        url = "https://celestrak.org/NORAD/elements/"
+        response = requests.get(url) # Достаём весь код страницы
+        response.raise_for_status() # Вызовет ошибку, если не удастся считать код
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        time = soup.find('h3').text.split()[-4].split(':')[0]
+        return time
+
+
 
 if __name__ == '__main__':
-    validator = Validator(data='test/frontend_output_bug.json')
-    validator.start_time_examination()
-    validator.date_examination()
+    validator = Validator(data='test/frontend_output.json')
+    # validator.start_time_examination()
+    # validator.date_examination()
+    print(validator.time_from_celestrak)
