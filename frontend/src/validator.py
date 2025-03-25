@@ -116,7 +116,7 @@ class Validator:
         response.raise_for_status() # Вызовет ошибку, если не удастся считать код
 
         soup = BeautifulSoup(response.text, 'html.parser')
-        time = soup.find('h3').text.split()[-4].split(':')[0]
+        time = int(soup.find('h3').text.split()[-4].split(':')[0])
         return time
 
 
