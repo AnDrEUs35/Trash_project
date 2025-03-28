@@ -10,7 +10,7 @@
             "value": 1000
         },
         "DATE": {
-            "value": "01.06.2026"
+            "value": "01.04.2025"
         },
         "MODEL_TIME": {
             "value": "00-02"
@@ -61,10 +61,10 @@
     },
     "time_for_count": {
         "max_time": {
-            "value": 6780
+            "value": 104
         },
         "snap_start": {
-            "value": 6778
+            "value": 102
         }
     }
 }

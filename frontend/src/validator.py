@@ -10,85 +10,90 @@ class Validator:
         self.data_path = data
         with open(data) as data_file:
             self.data = json.load(data_file) # Чтение данных из файла при создании объекта класса 
-            print("Данные успешно прочитаны валидатором. Начинаем проверку")
+            print("  - Данные успешно прочитаны валидатором. Начинаем проверку")
 
     def date_examination(self):
         self.date = self.data["main_settings"]["DATE"]["value"]
-        if self.date == "" or len(self.date.split('.')) != 3:
-            print(f'Ошибка значения в дате: "{self.date}"')
+        date_ex = self.date.split('.')
+        print(date_ex)
+        if self.date == "" or len(date_ex) != 3:
+            print(f'  - Ошибка значения в дате: "{self.date}". Должно быть 3 числа через точку.')
             raise ValueError
         else:
-            day, month, year = self.date.split('.')[0], self.date.split('.')[1], self.date.split('.')[2]
-            if self.__is_number(day) == False or self.__is_number(month) == False or self.__is_number(year) == False:
-                print(f'Ошибка значения в дате: "{self.date}"')
-                raise ValueError
+            day, month, year = date_ex[0], date_ex[1], date_ex[2]
+            for i in date_ex:
+                if self.__is_number(i) == False:
+                    print(f'  - Ошибка значения в дате: "{self.date}". Значения должны быть целыми числами.')
+                    raise ValueError
             else:
                 day, month, year = int(day), int(month), int(year)
+                self.date = datetime.datetime(year, month, day).date()
+                print(self.date)
 
-                date_now = str(datetime.datetime.now().date()).split('-')
-                day_now, month_now, year_now = int(date_now[2]), int(date_now[1]), int(date_now[0])
-
-                self.date_now_for_time = str(day_now) + '.' + str(month_now) + '.' + str(year_now)
+                self.date_now = datetime.datetime.now().date()
+                print(self.date_now)
 
                 if day > 31 and (month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12):
-                    print(f'Ошибка значения в дате: "{self.date}"')
+                    print(f'  - Ошибка значения в дате: "{self.date}". Дней в месяце 31.')
                     raise ValueError
                 elif day > 30 and (month == 2 or month == 4 or month == 6 or month == 9 or month == 11):
-                    print(f'Ошибка значения в дате: "{self.date}"')
+                    print(f'  - Ошибка значения в дате: "{self.date}". Дней в месяце 30.')
                     raise ValueError
-                elif day > 28 and (month == 2 and (year % 4 != 0 or (year % 100 == 0 and year % 4 == 0))):
-                    print(f'Ошибка значения в дате: "{self.date}"')
+                elif day >= 29 and (month == 2 and (year % 4 != 0 or (year % 100 == 0 and year % 4 == 0))):
+                    print(f'  - Ошибка значения в дате: "{self.date}". Дней в феврале 28 или 29 в зависимости от года.')
                     raise ValueError
-                elif month < 1 or month > 12 or day < 1:
-                    print(f'Ошибка значения в дате: "{self.date}"')
+                elif month < 1 or month > 12:
+                    print(f'  - Ошибка значения в дате: "{self.date}". Всего 12 месяцев. Нет нулевого дня месяца.')
                     raise ValueError
-                elif (day < day_now and month == month_now and year == year_now) or (month < month_now and year == year_now) or year < year_now:
-                    print(f'Ошибка значения в дате: "{self.date}". Мы не можем моделировать прошлое.')
+                elif day < 1:
+                     print(f'  - Ошибка значения в дате: "{self.date}". Месяц начинается с первого дня.')
+                     raise ValueError
+                elif self.date < self.date_now:
+                    print(f'  - Ошибка значения в дате: "{self.date}". Мы не можем моделировать прошлое.')
                     raise ValueError
                 else:
-                    print('Проверка корректности даты прошла успешно.')
+                    print('  - Проверка корректности даты прошла успешно.')
 
     def model_time_examination(self):
         model_time = self.data["main_settings"]["MODEL_TIME"]["value"]
         if model_time == "" or len(model_time) != 5:
-            print(f'Ошибка значения во временном промежутке: "{model_time}".')
+            print(f'  - Ошибка значения во временном промежутке: "{model_time}".')
             raise ValueError
         else:
             hour1, hour2 = model_time.split('-')[0], model_time.split('-')[1]
             if self.__is_number(hour1) == False or self.__is_number(hour2) == False:
-                print(f'Ошибка значения во временном промежутке: "{model_time}". Значения не являются числами')
+                print(f'  - Ошибка значения во временном промежутке: "{model_time}". Значения не являются числами')
                 raise ValueError
             else:
                 hour1, hour2 = int(hour1), int(hour2)
 
-                hour_now = datetime.datetime.now().time().hour
-                print(hour_now)
+                self.hour_now = datetime.datetime.now().time().hour
 
                 if (hour1 > 23 or hour1 < 0) or (hour2 > 23 or hour2 < 0):
-                    print(f'Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
+                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
                     raise ValueError
                 elif not 1 <= (hour2 - hour1) % 24 <= 5: 
-                    print(f'Ошибка значения во временном промежутке: "{model_time}". Промежуток не менее 1 часа, но и не более 5 часов.')
+                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". Промежуток не менее 1 часа, но и не более 5 часов.')
                     raise ValueError
-                elif hour1 < hour_now and self.date == self.date_now_for_time:
-                    print(f'Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое.')
+                elif hour1 < self.hour_now and self.date == self.date_now:
+                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое.')
                     raise ValueError
                 else:
-                    print("Проверка выбранного промежутка времени прошла успешно.")
+                    print("  - Проверка выбранного промежутка времени прошла успешно.")
         
     def name_examination(self):
         name = self.data["graf_settings"]["GRAPHIC_NAME"]["value"]
         if name=='':
-            print(f'Ошибка в значении имени файла: "{name}"')
+            print(f'  - Ошибка в значении имени файла: "{name}"')
             raise ValueError
         else:
-            print("Проверка подписи графика пройдена")
+            print("  - Проверка подписи графика пройдена")
 
     def __is_number(self, a):
         try:
             int(a)
             return True
-        except ValueError:
+        except Exception:
             return False
         
     def counting_time(self):
@@ -96,7 +101,7 @@ class Validator:
         time1 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[0])
         time2 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[1])
         duration = time2 - time1
-        count_hours = (parse(self.date) - parse(self.date_now_for_time)).days * 24 + (24 - self.time_from_celestrak) + time1
+        count_hours = (self.date - self.date_now).days * 24 + (24 - self.time_from_celestrak) + time1
         adding = {
                 "max_time": {
                     "value": count_hours + duration
@@ -111,18 +116,24 @@ class Validator:
 
     @property
     def time_from_celestrak(self):
-        url = "https://celestrak.org/NORAD/elements/"
-        response = requests.get(url) # Достаём весь код страницы
-        response.raise_for_status() # Вызовет ошибку, если не удастся считать код
+        try:
+            url = "https://celestrak.org/NORAD/elements/"
+            response = requests.get(url) # Достаём весь код страницы
+            response.raise_for_status() # Вызовет ошибку, если не удастся считать код
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        time = int(soup.find('h3').text.split()[-4].split(':')[0])
-        return time
+            soup = BeautifulSoup(response.text, 'html.parser')
+            time = int(soup.find('h3').text.split()[-4].split(':')[0])
+        except Exception as e:
+            print('Не удаются подключиться к сайту, принято значение времени, равное нынешнему. Ошибка:', e)
+            time = self.hour_now
+            return time
+        else:
+            return time
 
 
 
 if __name__ == '__main__':
     validator = Validator(data='test/frontend_output.json')
-    # validator.start_time_examination()
-    # validator.date_examination()
-    print(validator.time_from_celestrak)
+    validator.date_examination()
+    validator.model_time_examination()
+    # validator.counting_time()
