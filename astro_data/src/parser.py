@@ -1,7 +1,7 @@
 import requests
 import json
 from sgp4.api import Satrec
-from astropy.time import Time
+from astropy.coordinates import GCRS
 import sys
 import os 
 from datetime import datetime
@@ -14,12 +14,10 @@ class Satellite:
         self.coords = None
         self.velocity = None
 
-    def calculate_pos(self, custom_time=None):
+    def calculate_pos(self):
         satrec = Satrec.twoline2rv(self.line1, self.line2)
-        if custom_time:
-            t = Time(custom_time)  # Используем пользовательское время
-        else:
-            t = Time.now()  # Используем текущее время, если custom_time не указано
+        t = datetime.now()  # Используем текущее время
+        t = t.replace(hour=t.hour + 1, minute=0, second=0, microsecond=0)
         error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
         if error_code == 0:
             self.coords = list(teme_p)
@@ -60,14 +58,10 @@ class SatelliteProcess:
     def __init__(self):
         self.data = {
             "satellites": [],
-            "trash": [],
-            "user_properties": {
-                "time": 20,
-                "time_step": 4,
-            }
+            "trash": []
         }
 
-    def process_satellite(self, satellites, custom_time=None):
+    def process_satellite(self, satellites):
         for satellite in satellites:
             satellite.calculate_pos()
             self.data["satellites"].append({
@@ -76,7 +70,7 @@ class SatelliteProcess:
                 "velocity": satellite.velocity  
             })
 
-    def process_trash(self, trash, custom_time=None):
+    def process_trash(self, trash):
         for index, satellite in enumerate(trash, start=1):
             satellite.calculate_pos()
             self.data["trash"].append({
@@ -111,11 +105,7 @@ class Parser:
             else:
                 existing_data = {
                     "satellites": [],
-                    "trash": [],
-                    "user_properties": {
-                        "time": 20,
-                        "time_step": 4,
-                    }
+                    "trash": []
                 }
 
             # Добавление данных из frontend_output.json в существующие данные

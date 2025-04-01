@@ -1,8 +1,5 @@
 import json
 import datetime
-from dateutil.parser import parse
-import requests
-from bs4 import BeautifulSoup
 
 
 class Validator:
@@ -27,11 +24,12 @@ class Validator:
                     raise ValueError
             else:
                 day, month, year = int(day), int(month), int(year)
-                self.date = datetime.datetime(year, month, day).date()
-                print(self.date)
-
-                self.date_now = datetime.datetime.now().date()
-                print(self.date_now)
+                self.future_date = datetime.datetime(year, month, day)
+                self.date = self.future_date.date()
+                
+                self.now = datetime.datetime.now()
+                self.now = self.now.replace(hour=self.now.hour + 1, minute=0, second=0, microsecond=0)
+                print(self.now)
 
                 if day > 31 and (month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12):
                     print(f'  - Ошибка значения в дате: "{self.date}". Дней в месяце 31.')
@@ -48,7 +46,7 @@ class Validator:
                 elif day < 1:
                      print(f'  - Ошибка значения в дате: "{self.date}". Месяц начинается с первого дня.')
                      raise ValueError
-                elif self.date < self.date_now:
+                elif self.date < self.now.date():
                     print(f'  - Ошибка значения в дате: "{self.date}". Мы не можем моделировать прошлое.')
                     raise ValueError
                 else:
@@ -67,7 +65,7 @@ class Validator:
             else:
                 hour1, hour2 = int(hour1), int(hour2)
 
-                self.hour_now = datetime.datetime.now().time().hour
+                self.hour_now = self.now.hour
 
                 if (hour1 > 23 or hour1 < 0) or (hour2 > 23 or hour2 < 0):
                     print(f'  - Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
@@ -75,8 +73,8 @@ class Validator:
                 elif not 1 <= (hour2 - hour1) % 24 <= 5: 
                     print(f'  - Ошибка значения во временном промежутке: "{model_time}". Промежуток не менее 1 часа, но и не более 5 часов.')
                     raise ValueError
-                elif hour1 < self.hour_now and self.date == self.date_now:
-                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое.')
+                elif hour1 < self.now.hour and self.date == self.now.date():
+                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое. Укажите как минимум начало следующего часа от настоящего момента')
                     raise ValueError
                 else:
                     print("  - Проверка выбранного промежутка времени прошла успешно.")
@@ -97,11 +95,10 @@ class Validator:
             return False
         
     def counting_time(self):
-        # parse преобразует строковое значение даты в объекты datetime
         time1 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[0])
         time2 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[1])
         duration = time2 - time1
-        count_hours = (self.date - self.date_now).days * 24 + (24 - self.time_from_celestrak) + time1
+        count_hours = int(int((self.future_date - self.now).total_seconds()) / 3600 + time1)
         adding = {
                 "max_time": {
                     "value": count_hours + duration
@@ -113,23 +110,6 @@ class Validator:
         self.data['time_for_count'] = adding
         with open(self.data_path, 'w') as data_file:
             json.dump(self.data, data_file, indent=4)  # indent задаёт отсутпы для читабельности
-
-    @property
-    def time_from_celestrak(self):
-        try:
-            url = "https://celestrak.org/NORAD/elements/"
-            response = requests.get(url) # Достаём весь код страницы
-            response.raise_for_status() # Вызовет ошибку, если не удастся считать код
-
-            soup = BeautifulSoup(response.text, 'html.parser')
-            time = int(soup.find('h3').text.split()[-4].split(':')[0])
-        except Exception as e:
-            print('Не удаются подключиться к сайту, принято значение времени, равное нынешнему. Ошибка:', e)
-            time = self.hour_now
-            return time
-        else:
-            return time
-
 
 
 if __name__ == '__main__':
