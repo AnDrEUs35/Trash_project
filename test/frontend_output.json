@@ -61,10 +61,10 @@
     },
     "time_for_count": {
         "max_time": {
-            "value": 700
+            "value": 676
         },
         "snap_start": {
-            "value": 698
+            "value": 674
         }
     }
 }

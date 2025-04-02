@@ -1,9 +1,10 @@
 import requests
 import json
 from sgp4.api import Satrec
-from astropy.coordinates import GCRS
+from astropy.coordinates import GCRS, TEME
 import sys
 import os 
+from astropy.time import Time
 from datetime import datetime
 
 class Satellite:
@@ -17,11 +18,15 @@ class Satellite:
     def calculate_pos(self):
         satrec = Satrec.twoline2rv(self.line1, self.line2)
         t = datetime.now()  # Используем текущее время
-        t = t.replace(hour=t.hour + 1, minute=0, second=0, microsecond=0)
+        if t.minute != 0 or t.second != 0 or t.microsecond != 0:
+            t = t.replace(hour=t.hour + 1, minute=0, second=0, microsecond=0)
+        t = Time(t)
         error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
+        gcrs_p, gcrs_v = teme_p, teme_v
+        print(gcrs_p, gcrs_v)
         if error_code == 0:
-            self.coords = list(teme_p)
-            self.velocity = list(teme_v)
+            self.coords = list(gcrs_p)
+            self.velocity = list(gcrs_v)
         else:
             print(f"Ошибка при вычислении {self.name}: код ошибки {error_code}")
 
