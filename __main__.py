@@ -11,7 +11,7 @@ def main(input_path, output_path, state):
         config_path = input_path
         frontend.run_validator(config_path)
         debris_data_path = debris_data.run(config_path)
-        solver.run(debris_data_path, output_path)
+        # solver.run(debris_data_path, output_path)
     elif state == 'handler':
         data = './test/frontend_output.json'
         arepo_output_path = input_path
