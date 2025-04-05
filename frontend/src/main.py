@@ -1,5 +1,5 @@
 from . import validator
-import yaml
+# import yaml
 # import datetime
 
 def run_validator(data_path):
