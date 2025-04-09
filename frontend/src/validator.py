@@ -29,7 +29,6 @@ class Validator:
                 
                 self.now = datetime.datetime.now()
                 self.now = self.now.replace(hour=self.now.hour + 1, minute=0, second=0, microsecond=0)
-                print(self.now)
 
                 if day > 31 and (month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12):
                     print(f'  - Ошибка значения в дате: "{self.date}". Дней в месяце 31.')

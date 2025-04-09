@@ -196,7 +196,6 @@ class Map:
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
 
         # Отображаем линии для спутников
-        print(main_data)
         if main_data[1] == True:
             plot_lines(satellites_start, satellites_end, color=graph_data[1], line_style=graph_data[6], label='Спутники', marker=graph_data[5])
 

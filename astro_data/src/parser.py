@@ -24,21 +24,21 @@ class Satellite:
         t = Time(t)
         error_code, teme_p, teme_v = satrec.sgp4(t.jd1, t.jd2)  # в км и км/с
         
-        teme_coord = TEME(
-        x=teme_p[0] * u.km, y=teme_p[1] * u.km, z=teme_p[2] * u.km,
-        v_x=teme_v[0] * u.km/u.s, v_y=teme_v[1] * u.km/u.s, v_z=teme_v[2] * u.km/u.s,
-        obstime=t, representation_type='cartesian', differential_type='cartesian') # cartesian - декартовы координаты
+        # teme_coord = TEME(
+        # x=teme_p[0] * u.km, y=teme_p[1] * u.km, z=teme_p[2] * u.km,
+        # v_x=teme_v[0] * u.km/u.s, v_y=teme_v[1] * u.km/u.s, v_z=teme_v[2] * u.km/u.s,
+        # obstime=t, representation_type='cartesian', differential_type='cartesian') # cartesian - декартовы координаты
 
-        gcrs_coord = teme_coord.transform_to(GCRS(obstime=t))
+        # gcrs_coord = teme_coord.transform_to(GCRS(obstime=t))
 
         # Получаем координаты в GCRS
-        gcrs_p = gcrs_coord.cartesian.xyz.to(u.km).value
+        # gcrs_p = gcrs_coord.cartesian.xyz.to(u.km).value
         # Получаем скорость из дифференциала (правильный способ)
-        gcrs_v = gcrs_coord.cartesian.differentials["s"].d_xyz.to(u.km/u.s).value        
+        # gcrs_v = gcrs_coord.cartesian.differentials["s"].d_xyz.to(u.km/u.s).value        
 
         if error_code == 0:
-            self.coords = list(gcrs_p)
-            self.velocity = list(gcrs_v)
+            self.coords = list(teme_p)
+            self.velocity = list(teme_v)
         else:
             print(f"Ошибка при вычислении {self.name}: код ошибки {error_code}")
 
