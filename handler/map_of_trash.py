@@ -182,26 +182,26 @@ class Map:
         graph_data, main_data = read_front()
 
        # Функция для отрисовки линий
-        def plot_lines(start_coords, end_coords, color, line_style, marker, label):
+        def plot_lines(start_coords, end_coords, color, line_style, marker, label_line, label_start, label_end):
             for start, end in zip(start_coords, end_coords):
                 start_lat, start_lon = start
                 end_lat, end_lon = end
                 # Рисуем линии между начальными и конечными координатами
-                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=1, linestyle=line_style, label=label)
+                ax.plot([start_lon, end_lon], [start_lat, end_lat], color=color, linewidth=1, linestyle=line_style, label=label_line)
                 # Отображаем начальную и конечную точки
-                ax.scatter(start_lon, start_lat, color=color, marker=graph_data[2], s=marker, transform=ccrs.PlateCarree(), label=None)
-                ax.scatter(end_lon, end_lat, color=color, marker=graph_data[3], s=marker, transform=ccrs.PlateCarree(), label=None)
+                ax.scatter(start_lon, start_lat, color=color, marker=graph_data[2], s=marker, transform=ccrs.PlateCarree(), label=label_start)
+                ax.scatter(end_lon, end_lat, color=color, marker=graph_data[3], s=marker, transform=ccrs.PlateCarree(), label=label_end)
 
          # Отображаем местоположение человека
         ax.scatter(person_location[1], person_location[0], color='red', marker='x', s=150, label='Человек', transform=ccrs.PlateCarree())
 
         # Отображаем линии для спутников
         if main_data[1] == True:
-            plot_lines(satellites_start, satellites_end, color=graph_data[1], line_style=graph_data[6], label='Спутники', marker=graph_data[5])
+            plot_lines(satellites_start, satellites_end, color=graph_data[1], line_style=graph_data[6], label_line='Спутники', marker=graph_data[5], label_start="Начало (Спутник)", label_end="Конец (Спутник)")
 
         # Отображаем линии для мусора
         if main_data[0] == True:
-            plot_lines(debris_start, debris_end, color=graph_data[0], line_style=graph_data[7], label='Мусор', marker=graph_data[4])
+            plot_lines(debris_start, debris_end, color=graph_data[0], line_style=graph_data[7], label_line='Мусор', marker=graph_data[4], label_start="Начало (Мусор)", label_end="Конец (Мусор)")
 
         # Добавляем сетку (широта и долгота)
         gridlines = ax.gridlines(draw_labels=True, linestyle='--', color='gray', alpha=0.5)
