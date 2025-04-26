@@ -13,6 +13,9 @@ def project_orbit_to_earth(x, y, z, R=6371):
     Проецирует точку с орбиты на поверхность Земли и возвращает географические координаты"""
     # 1. Координаты проекции на поверхности Земли
     z, y = y, z # теперь все четко должно быть
+    x-=75000
+    y-=75000
+    z-=75000
     magnitude = math.sqrt(x**2 + y**2 + z**2)
     x_proj = (x / magnitude) * R
     y_proj = (y / magnitude) * R
@@ -78,7 +81,7 @@ class Map:
         min_lon = -180
 
 
-        if radius_km > 20000:  # Настройка предела, например, 20000 км
+        if radius_km >= 20000:  # Настройка предела, например, 20000 км
             extent = [min_lon, max_lon, min_lat, max_lat]
         else:
             extent = [
@@ -95,11 +98,15 @@ class Map:
         ax.set_extent(extent, crs=ccrs.PlateCarree())
 
         # Добавляем основной фон карты
+        ax.stock_img()
+        ax.add_feature(cfeature.OCEAN)
+        ax.add_feature(cfeature.BORDERS, linestyle='dotted')
         ax.add_feature(cfeature.BORDERS)
         ax.add_feature(cfeature.COASTLINE)
         ax.add_feature(cfeature.LAND)
         ax.add_feature(cfeature.LAKES, edgecolor='black')
         ax.add_feature(cfeature.RIVERS)
+        ax.add_feature(cfeature.RIVERS, edgecolor = 'blue')
 
         # Отображаем точки в пределах видимости
         if in_visibility:
@@ -143,7 +150,7 @@ class Map:
         buffer_lat = radius_km * lat_per_km
         buffer_long = radius_km * long_per_km
 
-        if radius_km > 20000:  # Настройка предела, например, 20000 км
+        if radius_km >= 20000:  # Настройка предела, например, 20000 км
                 # Установка границ карты
                 extent = [-180, 180, -90, 90]
         else:
@@ -162,11 +169,15 @@ class Map:
         ax.set_extent(extent, crs=ccrs.PlateCarree())
 
         # Добавляем основной фон карты
+        ax.stock_img()
+        ax.add_feature(cfeature.OCEAN)
+        ax.add_feature(cfeature.BORDERS, linestyle='dotted')
         ax.add_feature(cfeature.BORDERS)
         ax.add_feature(cfeature.COASTLINE)
         ax.add_feature(cfeature.LAND)
         ax.add_feature(cfeature.LAKES, edgecolor='black')
         ax.add_feature(cfeature.RIVERS)
+        ax.add_feature(cfeature.RIVERS, edgecolor = 'blue')
 
         def read_front():
             with open('./test/frontend_output.json') as file:

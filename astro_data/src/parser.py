@@ -1,7 +1,7 @@
 import requests
 import json
 from sgp4.api import Satrec
-from astropy.coordinates import GCRS, TEME, CartesianRepresentation
+# from astropy.coordinates import GCRS, TEME, CartesianRepresentation
 import astropy.units as u
 import sys
 import os 
