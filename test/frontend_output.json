@@ -13,7 +13,7 @@
             "value": "01.05.2025"
         },
         "MODEL_TIME": {
-            "value": "00-01"
+            "value": 0
         },
         "TRASH_TYPE": {
             "value": true
@@ -61,10 +61,10 @@
     },
     "time_for_count": {
         "max_time": {
-            "value": 110
+            "value": 130
         },
         "snap_start": {
-            "value": 108
+            "value": 128
         }
     }
 }

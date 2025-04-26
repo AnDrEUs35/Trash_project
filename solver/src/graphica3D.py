@@ -51,7 +51,7 @@ class Graphica3D:
             for i in range(n_sat):
                 for j in range(3):
                     try:
-                        pos_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['coords'][j])
+                        pos_sattelite[i][j] = +self.FloatType(self.data['satellites'][i]['coords'][j])
                         vel_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['velocity'][j])
                     except TypeError:
                         continue
@@ -69,7 +69,7 @@ class Graphica3D:
 
             for i in range(n_tr):
                 for j in range(3):
-                    pos_trash[i][j] = self.FloatType(self.data['trash'][i]['coords'][j])
+                    pos_trash[i][j] = +self.FloatType(self.data['trash'][i]['coords'][j])
                     vel_trash[i][j] = self.FloatType(self.data['trash'][i]['velocity'][j])
         else:
             n_tr = 0

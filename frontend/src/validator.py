@@ -2,6 +2,7 @@ import json
 import datetime
 
 
+
 class Validator:
     def __init__(self, data):
         self.data_path = data
@@ -12,7 +13,6 @@ class Validator:
     def date_examination(self):
         self.date = self.data["main_settings"]["DATE"]["value"]
         date_ex = self.date.split('.')
-        print(date_ex)
         if self.date == "" or len(date_ex) != 3:
             print(f'  - Ошибка значения в дате: "{self.date}". Должно быть 3 числа через точку.')
             raise ValueError
@@ -53,30 +53,26 @@ class Validator:
 
     def model_time_examination(self):
         model_time = self.data["main_settings"]["MODEL_TIME"]["value"]
-        if model_time == "" or len(model_time) != 5:
-            print(f'  - Ошибка значения во временном промежутке: "{model_time}".')
+        model_time = int(model_time)
+        if model_time == 0:
+            self.hour1, self.hour2 = 23, 1
+            self.date = self.date - datetime.timedelta(days=1)
+            print(self.date)
+        elif model_time == 23:
+            self.hour1, self.hour2 = 22, 0
+        else:
+            self.hour1, self.hour2 = model_time-1, model_time+1
+
+        self.hour_now = self.now.hour
+
+        if (model_time > 23 or model_time < 0):
+            print(f'  - Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
+            raise ValueError
+        elif self.hour1 < self.now.hour and self.date == self.now.date():
+            print(f'  - Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое. Укажите как минимум начало следующего часа от настоящего момента')
             raise ValueError
         else:
-            hour1, hour2 = model_time.split('-')[0], model_time.split('-')[1]
-            if self.__is_number(hour1) == False or self.__is_number(hour2) == False:
-                print(f'  - Ошибка значения во временном промежутке: "{model_time}". Значения не являются числами')
-                raise ValueError
-            else:
-                hour1, hour2 = int(hour1), int(hour2)
-
-                self.hour_now = self.now.hour
-
-                if (hour1 > 23 or hour1 < 0) or (hour2 > 23 or hour2 < 0):
-                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". В сутках 24 часа.')
-                    raise ValueError
-                elif not 1 <= (hour2 - hour1) % 24 <= 5: 
-                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". Промежуток не менее 1 часа, но и не более 5 часов.')
-                    raise ValueError
-                elif hour1 < self.now.hour and self.date == self.now.date():
-                    print(f'  - Ошибка значения во временном промежутке: "{model_time}". Мы не моделируем прошлое. Укажите как минимум начало следующего часа от настоящего момента')
-                    raise ValueError
-                else:
-                    print("  - Проверка выбранного промежутка времени прошла успешно.")
+            print("  - Проверка выбранного промежутка времени прошла успешно.")
         
     def name_examination(self):
         name = self.data["graf_settings"]["GRAPHIC_NAME"]["value"]
@@ -94,10 +90,8 @@ class Validator:
             return False
         
     def counting_time(self):
-        time1 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[0])
-        time2 = int(self.data['main_settings']['MODEL_TIME']['value'].split('-')[1])
-        duration = time2 - time1
-        count_hours = int(int((self.future_date - self.now).total_seconds()) / 3600 + time1)
+        duration = 2
+        count_hours = int(int((self.future_date - self.now).total_seconds()) / 3600 + self.hour1)
         adding = {
                 "max_time": {
                     "value": count_hours + duration
