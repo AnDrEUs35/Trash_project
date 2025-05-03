@@ -223,10 +223,9 @@ class Map:
 
         # Заголовок и легенда
         ax.set_title(f'Карта вокруг человека на координатах {person_location} с радиусом {radius_km} км', fontsize=13)
-        plt.legend(loc='upper right')
         # Добавляем легенду
         handles, labels = ax.get_legend_handles_labels()
-        by_label = dict(zip(labels, handles))
+        by_label = dict(zip(labels, handles)) # убираем копии
         ax.legend(by_label.values(), by_label.keys(), loc='best')
         # Устанавливаем аспект (чтобы карта была квадратной)
         ax.set_aspect('equal', adjustable='datalim')

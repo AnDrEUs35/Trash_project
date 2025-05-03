@@ -14,9 +14,9 @@ ResubmitOn 	 0
 ResubmitCommand 	 my-scriptfile
 UnitVelocity_in_cm_per_s 	 100000
 UnitLength_in_cm 	 100000
-UnitMass_in_g 	 100
+UnitMass_in_g 	 1000
 GravityConstantInternal 	 0.0
-BoxSize 	 150000
+BoxSize 	 1500000
 PeriodicBoundariesOn 	 1
 TimeBegin 	 0
 TimeMax 	 500
