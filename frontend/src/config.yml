@@ -38,31 +38,13 @@ FIELDS:
             ru: Введите дату в вида дд.мм.гггг; Дата ОБЯЗАТЕЛЬНО должна быть в будущем; Не используйте буквы
         default: 01.01.2026
 
-    START_TIME:
-        type: string
-        title:  
-            ru: Время начала отсчёта
-        hint:
-            ru: Введите время в виде чч.мм.сс по Гринвичу; Время ОБЯЗАТЕЛЬНО должно быть в будущем; Не используйте буквы
-        default: 00.00.00
-    
-    DURATION:
+    MODEL_TIME:
         type: integer
         title:  
-            ru: Продолжительность моделирования
+            ru: Время моделирования
         hint:
-            ru: Укажите промежуток времени в секундах, тип данных int
-        default: 100
-        min: 1
-    
-    STEP:
-        type: integer
-        hint:
-            ru: Укажите временной шаг в секундах для моделирования, тип данных int
-        title:
-            ru: Шаг моделироввания
-        default: 1
-
+            ru: Введите час, в который будет происходить запуск (он будет серединой двухчасового промежутка моделирования); Время ОБЯЗАТЕЛЬНО должно быть в будущем; Не используйте буквы. /Примечание/ моделирование может начинаться только не раньше следующего часа.
+        default: 0
 
     TRASH_TYPE:
         type: boolean
@@ -143,12 +125,12 @@ FIELDS:
             name:
               ru: Розовый  
 
-    MARKER_FORM_SATELITE:
+    MARKER_FORM_START:
         type: string
         title:  
-            ru: Форма маркера
+            ru: Форма маркера начала проекции
         hint:
-            ru: Выберите форму маркера для обозначения на графике спутников и мусора
+            ru: Выберите форму маркера для обозначения на графике точки, откуда начинается расчёт траектории тела
         default: 'o'
         enum:
             - value: 'o'
@@ -167,12 +149,12 @@ FIELDS:
               name:
                   ru: X-образный
 
-    MARKER_FORM_DEBRIS:
+    MARKER_FORM_END:
         type: string
         title:  
-            ru: Форма маркера
+            ru: Форма маркера конца проекции
         hint:
-            ru: Выберите форму маркера для обозначения на графике спутников и мусора
+            ru: Выберите форму маркера для обозначения на графике точки, где заканчивается расчёт траектории тела
         default: 'o'
         enum:
             - value: 'o'
@@ -356,9 +338,7 @@ STRUCTURE:
                 title:
                   ru: Время
             - field: DATE
-            - field: START_TIME
-            - field: DURATION
-            - field: STEP
+            - field: MODEL_TIME
             - separator:
                 title:
                   ru: Тип объекта моделирования
@@ -379,8 +359,6 @@ STRUCTURE:
                   ru: Настроки отображения Мусора
             - field: COLOR_DEBRIS
               view: dropdown
-            - field: MARKER_FORM_DEBRIS
-              view: dropdown
             - field: MARKER_SIZE_DEBRIS
             - field: LINE_STYLE_DEBRIS
               view: dropdown
@@ -389,10 +367,15 @@ STRUCTURE:
                   ru: Настроки отображения спутников
             - field: COLOR_SATELITE
               view: dropdown
-            - field: MARKER_FORM_SATELITE
-              view: dropdown
             - field: MARKER_SIZE_SATELITE
             - field: LINE_STYLE_SATELITE
+              view: dropdown
+            - separator:
+                title:
+                  ru: Настройка формы маркера
+            - field: MARKER_FORM_START
+              view: dropdown
+            - field: MARKER_FORM_END
               view: dropdown
 
 

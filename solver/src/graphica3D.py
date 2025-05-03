@@ -3,7 +3,7 @@ import numpy as np
 import h5py
 import json
 import os
-
+import sys
 
 class Graphica3D:
     
@@ -22,8 +22,8 @@ class Graphica3D:
         # библиотеке AREPO code. Вся информация в этих файлах статична,
         # поскольку моделирование зависит только от расположения 
         # частиц (спуников, мусора и т.п.)
-        os.system(f'cp ./param.txt {self.output_path}/param.txt')
-        os.system(f'cp ./Config.sh {self.output_path}/Config.sh')
+        os.system(f'cp {sys.path[0]}/param.txt {self.output_path}/param.txt')
+        os.system(f'cp {sys.path[0]}/Config.sh {self.output_path}/Config.sh')
     
     def get_hdf5(self):
         # return './../test/IC.hdf5'
@@ -50,8 +50,11 @@ class Graphica3D:
             # filling pos and vel of filtered_objects and trash
             for i in range(n_sat):
                 for j in range(3):
-                    pos_sattelite[i][j] += self.FloatType(self.data['satellites'][i]['coords'][j])
-                    vel_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['velocity'][j])
+                    try:
+                        pos_sattelite[i][j] = +self.FloatType(self.data['satellites'][i]['coords'][j])
+                        vel_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['velocity'][j])
+                    except TypeError:
+                        continue
         else:
             n_sat = 0
 
@@ -66,7 +69,7 @@ class Graphica3D:
 
             for i in range(n_tr):
                 for j in range(3):
-                    pos_trash[i][j] = self.FloatType(self.data['trash'][i]['coords'][j])
+                    pos_trash[i][j] = +self.FloatType(self.data['trash'][i]['coords'][j])
                     vel_trash[i][j] = self.FloatType(self.data['trash'][i]['velocity'][j])
         else:
             n_tr = 0

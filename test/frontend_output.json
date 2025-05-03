@@ -1,56 +1,70 @@
 {
-	"main_settings": {
-		"WIDTH": {
-			"value": 0
-		},
-		"LONG": {
-			"value": 0
-		},
-		"RADIUS": {
-			"value": 1
-		},
-		"DATE": {
-			"value": "26.12.2026"
-		},
-		"START_TIME": {
-			"value": "00.00.00"
-		},
-		"DURATION": {
-			"value": 100
-		},
-		"STEP": {
-			"value": 1
-		},
-		"TRASH_TYPE": {
-			"value": true
-		},
-		"SATELITE_TYPE": {
-			"value": true
-		}
-	},
-	"graf_settings": {
-		"FILE_NAME": {
-			"value": "test"
-		},
-		"COLOR": {
-			"value": "black"
-		},
-		"MARKER_FORM": {
-			"value": "o"
-		},
-		"MARKER_SIZE": {
-			"value": 5
-		},
-		"LINE_STYLE": {
-			"value": "-"
-		},
-		"TYPE_OF_FILE": {
-			"value": ".png"
-		}
-	},
-	"user_satelites": {
-		"USER_SATELITE": {
-			"value": []
-		}
-	}
+    "main_settings": {
+        "WIDTH": {
+            "value": 50
+        },
+        "LONG": {
+            "value": 60
+        },
+        "RADIUS": {
+            "value": 1000
+        },
+        "DATE": {
+            "value": "01.05.2025"
+        },
+        "MODEL_TIME": {
+            "value": 0
+        },
+        "TRASH_TYPE": {
+            "value": true
+        },
+        "SATELITE_TYPE": {
+            "value": true
+        }
+    },
+    "graf_settings": {
+        "GRAPHIC_NAME": {
+            "value": "test"
+        },
+        "TYPE_OF_FILE": {
+            "value": ".png"
+        },
+        "COLOR_DEBRIS": {
+            "value": "red"
+        },
+        "MARKER_SIZE_DEBRIS": {
+            "value": 5
+        },
+        "LINE_STYLE_DEBRIS": {
+            "value": "--"
+        },
+        "COLOR_SATELITE": {
+            "value": "green"
+        },
+        "MARKER_SIZE_SATELITE": {
+            "value": 10
+        },
+        "LINE_STYLE_SATELITE": {
+            "value": "-."
+        },
+        "MARKER_FORM_START": {
+            "value": "o"
+        },
+        "MARKER_FORM_END": {
+            "value": "*"
+        }
+    },
+    "user_satelites": {
+        "USER_SATELITE": {
+            "value": []
+        }
+    },
+    "time_for_count": {
+        "max_time": {
+            "value": 130
+        },
+        "snap_start": {
+            "value": 128
+        }
+    }
 }

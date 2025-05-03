@@ -1,12 +1,13 @@
 from . import validator
-import yaml
+# import yaml
 # import datetime
 
 def run_validator(data_path):
     valid = validator.Validator(data_path)
     valid.date_examination()
-    valid.start_time_examination()
+    valid.model_time_examination()
     valid.name_examination()
+    valid.counting_time()
 
 # def change_time(path):
 #     with open(path, encoding="UTF-8") as f:
