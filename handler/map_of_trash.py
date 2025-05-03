@@ -9,13 +9,15 @@ import h5py
 import json
 
 def project_orbit_to_earth(x, y, z, R=6371):
+    import linecache
     """
     Проецирует точку с орбиты на поверхность Земли и возвращает географические координаты"""
+    half_of_box_size = int(linecache.getline('././param.txt',19).split()[1])/2 # Узнаем смещение координат из-за размеров корбки моделирования
     # 1. Координаты проекции на поверхности Земли
     z, y = y, z # теперь все четко должно быть
-    x-=75000
-    y-=75000
-    z-=75000
+    x-=half_of_box_size
+    y-=half_of_box_size # Приводим координаты к начальному виду
+    z-=half_of_box_size
     magnitude = math.sqrt(x**2 + y**2 + z**2)
     x_proj = (x / magnitude) * R
     y_proj = (y / magnitude) * R

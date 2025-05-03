@@ -57,7 +57,6 @@ class Validator:
         if model_time == 0:
             self.hour1, self.hour2 = 23, 1
             self.date = self.date - datetime.timedelta(days=1)
-            print(self.date)
         elif model_time == 23:
             self.hour1, self.hour2 = 22, 0
         else:

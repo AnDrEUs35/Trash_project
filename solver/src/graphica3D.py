@@ -4,6 +4,7 @@ import h5py
 import json
 import os
 import sys
+import linecache
 
 class Graphica3D:
     
@@ -13,7 +14,7 @@ class Graphica3D:
 
         self.FloatType = np.float64
         self.IntType = np.int32
-        self.BoxSize = self.FloatType(150000) # км, размер области моделирования
+        self.BoxSize = self.FloatType(int(linecache.getline('./././param.txt',19).split()[1])) # км, размер области моделирования # км, размер области моделирования
 
         with open(data, 'r') as file:
             self.data = json.load(file)
@@ -51,7 +52,7 @@ class Graphica3D:
             for i in range(n_sat):
                 for j in range(3):
                     try:
-                        pos_sattelite[i][j] = +self.FloatType(self.data['satellites'][i]['coords'][j])
+                        pos_sattelite[i][j] += self.FloatType(self.data['satellites'][i]['coords'][j])
                         vel_sattelite[i][j] = self.FloatType(self.data['satellites'][i]['velocity'][j])
                     except TypeError:
                         continue
@@ -69,7 +70,7 @@ class Graphica3D:
 
             for i in range(n_tr):
                 for j in range(3):
-                    pos_trash[i][j] = +self.FloatType(self.data['trash'][i]['coords'][j])
+                    pos_trash[i][j] += self.FloatType(self.data['trash'][i]['coords'][j])
                     vel_trash[i][j] = self.FloatType(self.data['trash'][i]['velocity'][j])
         else:
             n_tr = 0

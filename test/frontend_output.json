@@ -7,10 +7,10 @@
             "value": 60
         },
         "RADIUS": {
-            "value": 1000
+            "value": 20000
         },
         "DATE": {
-            "value": "01.05.2025"
+            "value": "07.05.2025"
         },
         "MODEL_TIME": {
             "value": 0
@@ -61,10 +61,10 @@
     },
     "time_for_count": {
         "max_time": {
-            "value": 130
+            "value": 107
         },
         "snap_start": {
-            "value": 128
+            "value": 105
         }
     }
 }
